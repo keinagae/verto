@@ -181,15 +181,12 @@
 </template>
 
 <script>
-import {
-  mapState
-} from 'vuex'
+import { mapState } from 'vuex'
+import contract from '../../../mixins/contract'
 export default {
   name: 'AddLiquidityDialog',
   data () {
     return {
-      gasInterval: null,
-      gasOptions: null,
       transactionStatus: false,
       invalidTransaction: false,
       gasSelected: null,
@@ -230,7 +227,6 @@ export default {
       ethTokens: [],
       ethAccount: null,
       availableAmount: 0,
-      poolContractABIS: {},
       tokenInWallet: false,
       processWithMetamask: false,
       web3Instance: null,
@@ -336,18 +332,7 @@ export default {
       }
       console.log(this.externalWallets)
     },
-    async getContractABI (address) {
-      let abi = this.poolContractABIS[address]
 
-      if (!abi) {
-        await this.$axios.post('https://api.etherscan.io/api?apikey=YBABRIF5FBIVNZZK3R8USGI94444WQHHBN&module=contract&action=getabi&address=' + address + '')
-          .then((result) => {
-            abi = result.data.result
-            this.poolContractABIS[address] = abi
-          })
-      }
-      return abi
-    },
     setDialogData () {
       if (this.$store.state.investment.selectedPool) {
         let account = this.ethAccount.find(o => o.chain === 'eth' && o.type === 'eth')
@@ -381,9 +366,7 @@ export default {
         tokenABI = null,
         fromTokenAddress = this.currentToken.contract ? this.currentToken.contract : '0x0000000000000000000000000000000000000000'
       let toAddress = this.contractAddress[this.pool.platform.replace(/[^0-9a-z]/gi, '').toLowerCase()]
-      await this.getContractABI(toAddress).then(value => {
-        poolContractABI = value
-      })
+      poolContractABI = await this.getContractABI(toAddress)
 
       let nonce = await this.web3Instance.eth.getTransactionCount(this.currentToken.key, 'latest')
       const poolContract = new this.web3Instance.eth.Contract(JSON.parse(poolContractABI), toAddress)
@@ -401,10 +384,7 @@ export default {
       let tx = null
 
       if (this.currentToken.isERC20) {
-        console.log(fromTokenAddress)
-        await this.getContractABI(fromTokenAddress).then(value => {
-          tokenABI = value
-        })
+        tokenABI = await this.getContractABI(fromTokenAddress)
         const tokenContract = new this.web3Instance.eth.Contract(JSON.parse(tokenABI), fromTokenAddress)
 
         const allowance = parseInt(await tokenContract.methods.allowance(this.currentToken.key, toAddress).call())
@@ -413,14 +393,12 @@ export default {
           this.approvalRequired = true
           tx = tokenContract.methods.approve(
             toAddress,
-            this.web3Instance.utils.toWei('79228162514.26', 'ether')
+            this.web3Instance.utils.toHex(this.sendAmount * 10 ** 18 * 100)
           )
           transactionObject.to = fromTokenAddress
         } else {
           this.approvalRequired = false
         }
-
-        console.log(allowance, 2222)
       }
 
       let amount = this.currentToken.isERC20 ? this.web3Instance.utils.toHex(this.sendAmount * 10 ** 18) : transactionObject.value
@@ -560,11 +538,11 @@ export default {
         if (!self.gasSelected && self.gasOptions[1]) {
           self.gasSelected = self.gasOptions[1]
         }
-        this.invalidTransaction = false
+        self.invalidTransaction = false
       })
         .catch((error) => {
           console.log('estimateGas error', error)
-          this.invalidTransaction = true
+          self.invalidTransaction = true
         })
     },
     getUSDGasPrice (gweiPrice, gasNumber) {
@@ -657,8 +635,8 @@ export default {
         }
       })
     }
-  }
-
+  },
+  mixins: [contract]
 }
 </script>
 
