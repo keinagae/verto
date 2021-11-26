@@ -137,25 +137,9 @@ module.exports = function (ctx) {
       },
       scopeHoisting: true,
       vueRouterMode: 'history',
-      // vueCompiler: true,
-      // gzip: true,
-      // analyze: true,
       extractCSS: true,
+      transpile: true,
       extendWebpack (cfg) {
-        console.log(cfg)
-        // cfg.plugins.push(
-        //   new HtmlWebpackPlugin({
-        //     template: `${__dirname}\\src\\index2.template.html`,
-        //     filename: 'index3.html',
-        //     chunks: 'all',
-        //     ctx: ctx,
-        //     process: { env: env },
-        //     productName: 'PageTitle 3',
-        //     productDescription: 'PageDescription 3',
-        //     minify: true,
-        //     hash: true
-        //   })
-        // )
         cfg.resolve.alias = {
           ...cfg.resolve.alias,
           '@': path.resolve(__dirname, './src')
