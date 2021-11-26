@@ -635,7 +635,7 @@ export default {
     }
     let tableData = await this.$store.state.wallets.tokens
     this.eosAccounts = tableData.filter((w) => w.chain === 'eos')
-    rpc = new JsonRpc(process.env[this.$store.state.settings.network].CACHE + 'https://eos.greymass.com:443')
+    rpc = new JsonRpc(process.env.APP_DATA[this.$store.state.settings.network].CACHE + 'https://eos.greymass.com:443')
     // //console.log(this.destinationCoin, this.destinationCoin)
     if (this.$store.state.settings.dexData.depositCoin && this.crossChain) {
       let item = this.$store.state.settings.coins.defibox.find((o) => o.value.toLowerCase() === this.$store.state.settings.dexData.depositCoin.value.toLowerCase())
@@ -706,7 +706,7 @@ export default {
       this.hideSlippage = true
     },
     async getMinePair () {
-      let endpoint = process.env[this.$store.state.settings.network].CACHE + 'https://defibox.io/api/swap/getMinePair'
+      let endpoint = process.env.APP_DATA[this.$store.state.settings.network].CACHE + 'https://defibox.io/api/swap/getMinePair'
       await this.$axios.get(endpoint).then((result) => {
         this.miningData = result.data.data
       })
@@ -715,7 +715,7 @@ export default {
       // document.querySelector('.depositQuantity input').setSelectionRange(0, 0)
     },
     async getMiningData (pairId) {
-      let endpoint = process.env[this.$store.state.settings.network].CACHE + 'https://defibox.io/api/swap/getMarket'
+      let endpoint = process.env.APP_DATA[this.$store.state.settings.network].CACHE + 'https://defibox.io/api/swap/getMarket'
 
       let val = null
       await this.$axios

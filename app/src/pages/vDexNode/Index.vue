@@ -726,7 +726,7 @@ export default {
     }
   },
   mounted () {
-    rpc = new EosRPC(process.env[this.$store.state.settings.network].EOS_HISTORYAPI)
+    rpc = new EosRPC(process.env.APP_DATA[this.$store.state.settings.network].EOS_HISTORYAPI)
 
     // let tableData = this.$store.state.wallets.tokens
     this.accounts = this.$store.state.wallets.tokens.filter(o => o.origin === 'eos_testnet').map(w => {
@@ -773,7 +773,7 @@ export default {
       this.$vDexNodeConfigManager.accountRun(this.identity.accountName)
     },
     initAccount (account) {
-      this.$vDexNodeConfigManager = new VDexNodeConfigManager(process.env[this.$store.state.settings.network].EOS_HISTORYAPI)
+      this.$vDexNodeConfigManager = new VDexNodeConfigManager(process.env.APP_DATA[this.$store.state.settings.network].EOS_HISTORYAPI)
       this.identity.accountName = this.account.name
       this.destroyIntervals()
       this.$store.commit('vdexnode/setAccountName', this.account.name)
@@ -822,7 +822,7 @@ export default {
       this.getRegisteredNodesData()
     },
     initEosAPI (privateKey) {
-      this.eosApi = new EosAPI(privateKey, process.env[this.$store.state.settings.network].EOS_HISTORYAPI)
+      this.eosApi = new EosAPI(privateKey, process.env.APP_DATA[this.$store.state.settings.network].EOS_HISTORYAPI)
     },
     updateNow () {
       this.now = Math.round(new Date().getTime() / 1000)

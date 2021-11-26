@@ -6,7 +6,7 @@ import RenJS from '@renproject/ren'
 import { Bitcoin, Ethereum } from '@renproject/chains'
 import Lib from '@/util/walletlib'
 import abiArray from '@/statics/abi/erc20.json'
-const _1inch = process.env[store.state.settings.network].CACHE + 'https://api.1inch.exchange'
+const _1inch = process.env.APP_DATA[store.state.settings.network].CACHE + 'https://api.1inch.exchange'
 import {
   JsonRpc
 } from 'eosjs'
@@ -273,7 +273,7 @@ class Crosschaindex {
     if (store.state.settings.globalSettings && store.state.settings.globalSettings.defiboxPairs) {
       pairs = store.state.settings.globalSettings.defiboxPairs
     } else {
-      let rpc = new JsonRpc(process.env[store.state.settings.network].CACHE + 'https://eos.greymass.com:443')
+      let rpc = new JsonRpc(process.env.APP_DATA[store.state.settings.network].CACHE + 'https://eos.greymass.com:443')
 
       let pairs = this.cache['defibox_pairs']
       if (!pairs) {
@@ -380,7 +380,7 @@ class Crosschaindex {
              amount: Math.round(amount * 10 ** fromToken.decimals)
            }
            axios
-             .get(process.env[store.state.settings.network].CACHE + self.base.oneinch + evmData.network_id + '/quote?' + new URLSearchParams(data).toString())
+             .get(process.env.APP_DATA[store.state.settings.network].CACHE + self.base.oneinch + evmData.network_id + '/quote?' + new URLSearchParams(data).toString())
              .then(res => {
                data.amount = res.data.toTokenAmount.toString() / (10 ** toToken.decimals)
                data.fromChains = validChains
@@ -505,7 +505,7 @@ class Crosschaindex {
      return list[this.currentExchange]()
    }
   getVtxEquivalent = () => {
-    axios.get(process.env[store.state.settings.network].CACHE + 'https://api.coingecko.com/api/v3/simple/price?ids=volentix-vtx&vs_currencies=eth,eos')
+    axios.get(process.env.APP_DATA[store.state.settings.network].CACHE + 'https://api.coingecko.com/api/v3/simple/price?ids=volentix-vtx&vs_currencies=eth,eos')
       .then(res => {
         if (res && res.data && res.data['volentix-vtx']) { this.vtxEquiv = res.data['volentix-vtx'] }
       })

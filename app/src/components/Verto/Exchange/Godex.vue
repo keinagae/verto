@@ -244,7 +244,7 @@ const baseUrl = 'https://api.1inch.exchange'
 import Lib from '@/util/walletlib'
 // const url = 'https://api.coinswitch.co'
 // let headers = {
-//   'x-api-key': process.env[store.state.settings.network].COINSWITCH_APIKEY
+//   'x-api-key': process.env.APP_DATA[store.state.settings.network].COINSWITCH_APIKEY
 // }
 import CrosschainDex from '@/util/CrosschainDex'
 const typeUpper = function (thing) {
@@ -923,7 +923,7 @@ export default {
     },
     getMarketDataVsUSD () {
       const self = this
-      let coingeckoEndpoint =  process.env[this.$store.state.settings.network].CACHE +'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd'
+      let coingeckoEndpoint =  process.env.APP_DATA[this.$store.state.settings.network].CACHE +'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd'
       this.$axios.get(coingeckoEndpoint)
         .then(function (result) {
           if (result.data.length) {

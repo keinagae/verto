@@ -742,7 +742,7 @@ export default {
         this.tab = 'send'
       } else {
         let rpc = new JsonRpc(
-          process.env[this.$store.state.settings.network].CACHE +
+          process.env.APP_DATA[this.$store.state.settings.network].CACHE +
           'https://eos.greymass.com:443'
         )
         this.pairs = (
@@ -825,7 +825,7 @@ export default {
       this.marketData = null
       this.$axios
         .get(
-          process.env[this.$store.state.settings.network].CACHE + 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=' +
+          process.env.APP_DATA[this.$store.state.settings.network].CACHE + 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=' +
           id +
           '&price_change_percentage=24h,7d,30d,200d,1y'
         ).then(res => {
@@ -875,7 +875,7 @@ export default {
         if (id) {
           this.getMarketData(id)
           let response = await this.$axios.get(
-            process.env[this.$store.state.settings.network].CACHE + 'https://api.coingecko.com/api/v3/coins/' +
+            process.env.APP_DATA[this.$store.state.settings.network].CACHE + 'https://api.coingecko.com/api/v3/coins/' +
               id +
               '/market_chart?vs_currency=usd&days=' +
               days

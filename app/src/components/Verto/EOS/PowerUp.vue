@@ -168,7 +168,7 @@ export default {
     },
     async getRessourceData () {
       if (this.action === 'ressources') {
-        const resources = new Resources({ url: process.env[this.$store.state.settings.network].EOS_HISTORYAPI })
+        const resources = new Resources({ url: process.env.APP_DATA[this.$store.state.settings.network].EOS_HISTORYAPI })
         const [powerupState, usage] = await Promise.all([ resources.v1.powerup.get_state(), resources.getSampledUsage() ])
         this.txData.cpu_fee = powerupState.cpu.price_per_ms(usage, this.cpuAmount)
         this.txData.cpu_frac = powerupState.cpu.frac_by_ms(usage, this.cpuAmount)

@@ -276,7 +276,7 @@ class Lib {
       async sol (token, key, data) {
         return new Promise(async (resolve, reject) => {
           let actions = []
-          axios.get(process.env[store.state.settings.network].CACHE + 'https://api.solscan.io/account/transaction?address=' + key)
+          axios.get(process.env.APP_DATA[store.state.settings.network].CACHE + 'https://api.solscan.io/account/transaction?address=' + key)
             .then(function (result) {
               result.data.data.filter(o => o.parsedInstruction[0].type.toLowerCase() === 'sol-transfer').map(a => {
                 let tx = {}
@@ -313,7 +313,7 @@ class Lib {
       async eos (token, key, data) {
         return new Promise(async (resolve, reject) => {
           let actions = []
-          axios.post(process.env[store.state.settings.network].CACHE + process.env[store.state.settings.network].EOS_HISTORYAPI + '/v1/history/get_actions', {
+          axios.post(process.env.APP_DATA[store.state.settings.network].CACHE + process.env.APP_DATA[store.state.settings.network].EOS_HISTORYAPI + '/v1/history/get_actions', {
             'account_name': key,
             pos: data.position,
             offset: data.offset
@@ -394,7 +394,7 @@ class Lib {
           let evmData = self.getEvmData(token)
           axios
             .get(
-              process.env[store.state.settings.network].CACHE +
+              process.env.APP_DATA[store.state.settings.network].CACHE +
           'https://api.covalenthq.com/v1/' + evmData.network_id +
           '/address/' + key + '/transactions_v2/',
               { auth: { username: 'ckey_a9e6f6ab90584877b86b151eef3' } }
@@ -466,7 +466,7 @@ class Lib {
         return new Promise(async (resolve, reject) => {
           axios
             .get(
-              process.env[store.state.settings.network].CACHE +
+              process.env.APP_DATA[store.state.settings.network].CACHE +
          // 'https://chain.api.btc.com/v3/address/' + key + '/tx'
          'https://api.blockchain.info/haskoin-store/btc/address/' + key + '/transactions/full?limit=100&offset=0'
             )
@@ -554,7 +554,7 @@ class Lib {
       },
       async ksm (token, key) {
         let actions = []
-        await axios.post(process.env[store.state.settings.network].CACHE + 'https://kusama.api.subscan.io/api/scan/transfers', {
+        await axios.post(process.env.APP_DATA[store.state.settings.network].CACHE + 'https://kusama.api.subscan.io/api/scan/transfers', {
           'X-API-Key': key
         })
           .then(function (result) {
@@ -608,7 +608,7 @@ class Lib {
         let Pkey = new solanaWeb3.PublicKey(key)
         console.log(key, 'key', Pkey, 'Pkey')
         let amount = await connection.getBalance(Pkey)
-        let tokenPrice = (await axios.get(process.env[store.state.settings.network].CACHE + 'https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd')).data.solana.usd
+        let tokenPrice = (await axios.get(process.env.APP_DATA[store.state.settings.network].CACHE + 'https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd')).data.solana.usd
         amount = amount * 0.000000001
         const usd = amount * tokenPrice
 
@@ -655,7 +655,7 @@ class Lib {
         // balance.toNumber()
         //  let { data: { free: amount } } = await api.query.system.account(key)
 
-        let res = await axios.get(process.env[store.state.settings.network].CACHE + 'https://explorer-32.polkascan.io/api/v1/polkadot/account/' + key)
+        let res = await axios.get(process.env.APP_DATA[store.state.settings.network].CACHE + 'https://explorer-32.polkascan.io/api/v1/polkadot/account/' + key)
         let amount = 0
         if (res && res.data && res.data.data) {
           amount = res.data.data.attributes.balance_free / 1000000000000
@@ -680,7 +680,7 @@ class Lib {
 
         */
 
-        let tokenPrice = (await axios.get(process.env[store.state.settings.network].CACHE + 'https://api.coingecko.com/api/v3/simple/price?ids=polkadot&vs_currencies=usd')).data.polkadot.usd
+        let tokenPrice = (await axios.get(process.env.APP_DATA[store.state.settings.network].CACHE + 'https://api.coingecko.com/api/v3/simple/price?ids=polkadot&vs_currencies=usd')).data.polkadot.usd
         const usd = amount * tokenPrice
 
         return {
@@ -700,12 +700,12 @@ class Lib {
 
         */
 
-        let res = await axios.get(process.env[store.state.settings.network].CACHE + 'https://explorer-32.polkascan.io/api/v1/kusama/account/' + key)
+        let res = await axios.get(process.env.APP_DATA[store.state.settings.network].CACHE + 'https://explorer-32.polkascan.io/api/v1/kusama/account/' + key)
         let amount = 0
         if (res && res.data && res.data.data) {
           amount = res.data.data.attributes.balance_free / 1000000000000
         }
-        let tokenPrice = (await axios.get(process.env[store.state.settings.network].CACHE + 'https://api.coingecko.com/api/v3/simple/price?ids=kusama&vs_currencies=usd')).data.kusama.usd
+        let tokenPrice = (await axios.get(process.env.APP_DATA[store.state.settings.network].CACHE + 'https://api.coingecko.com/api/v3/simple/price?ids=kusama&vs_currencies=usd')).data.kusama.usd
         const usd = amount * tokenPrice
         return {
           amount,
@@ -722,10 +722,10 @@ class Lib {
       },
       async btc (key) {
         // key = '15urYnyeJe3gwbGJ74wcX89Tz7ZtsFDVew'
-        const amount = (await axios.get(process.env[store.state.settings.network].CACHE + 'https://blockchain.info/q/addressbalance/' + key, {
+        const amount = (await axios.get(process.env.APP_DATA[store.state.settings.network].CACHE + 'https://blockchain.info/q/addressbalance/' + key, {
           'cors': 'true'
         })).data / 100000000
-        let tokenPrice = (await axios.get(process.env[store.state.settings.network].CACHE + 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd')).data.bitcoin.usd
+        let tokenPrice = (await axios.get(process.env.APP_DATA[store.state.settings.network].CACHE + 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd')).data.bitcoin.usd
         const usd = amount * tokenPrice
         return {
           amount,
@@ -734,8 +734,8 @@ class Lib {
         }
       },
       async ltc (key) {
-        const amount = (await axios.get(process.env[store.state.settings.network].CACHE + 'https://chainz.cryptoid.info/ltc/api.dws?key=9e24784791a6&q=getbalance&a=' + key)).data
-        let tokenPrice = (await axios.get(process.env[store.state.settings.network].CACHE + 'https://api.coingecko.com/api/v3/simple/price?ids=litecoin&vs_currencies=usd')).data.litecoin.usd
+        const amount = (await axios.get(process.env.APP_DATA[store.state.settings.network].CACHE + 'https://chainz.cryptoid.info/ltc/api.dws?key=9e24784791a6&q=getbalance&a=' + key)).data
+        let tokenPrice = (await axios.get(process.env.APP_DATA[store.state.settings.network].CACHE + 'https://api.coingecko.com/api/v3/simple/price?ids=litecoin&vs_currencies=usd')).data.litecoin.usd
         const usd = amount * tokenPrice
         return {
           amount,
@@ -746,7 +746,7 @@ class Lib {
       async bnb (key, token) {
         let amount = 0
         try {
-          const balances = (await axios.get(process.env[store.state.settings.network].CACHE + 'https://dex.binance.org/api/v1/account/' + key)).data.balances
+          const balances = (await axios.get(process.env.APP_DATA[store.state.settings.network].CACHE + 'https://dex.binance.org/api/v1/account/' + key)).data.balances
           if (balances) {
             balances.filter(b => b.symbol === token.toUpperCase()).map(b => {
               amount = +b.free + +b.frozen + +b.locked
@@ -756,7 +756,7 @@ class Lib {
         } catch (err) {
           /// ///console.log('', err)
         }
-        let tokenPrice = (await axios.get(process.env[store.state.settings.network].CACHE + 'https://api.coingecko.com/api/v3/simple/price?ids=binancecoin&vs_currencies=usd')).data.binancecoin.usd
+        let tokenPrice = (await axios.get(process.env.APP_DATA[store.state.settings.network].CACHE + 'https://api.coingecko.com/api/v3/simple/price?ids=binancecoin&vs_currencies=usd')).data.binancecoin.usd
         const usd = amount * tokenPrice
         return {
           amount,
@@ -767,7 +767,7 @@ class Lib {
       async ada (key, token) {
         let amount = 0
         try {
-          const balances = (await axios.get(process.env[store.state.settings.network].CACHE + 'https://cardano-mainnet.blockfrost.io/api/v0/addresses/' + key, { project_id: 'hFiQ3t403yXFYs3bfOKDwVX9BMGpJbDH' })).data.amount
+          const balances = (await axios.get(process.env.APP_DATA[store.state.settings.network].CACHE + 'https://cardano-mainnet.blockfrost.io/api/v0/addresses/' + key, { project_id: 'hFiQ3t403yXFYs3bfOKDwVX9BMGpJbDH' })).data.amount
           if (balances) {
             balances.filter(b => b.unit === token).map(b => {
               amount = +b.quantity
@@ -777,7 +777,7 @@ class Lib {
         } catch (err) {
           // console.log('ada catch', err)
         }
-        let tokenPrice = (await axios.get(process.env[store.state.settings.network].CACHE + 'https://api.coingecko.com/api/v3/simple/price?ids=cardano&vs_currencies=usd')).data.cardano.usd
+        let tokenPrice = (await axios.get(process.env.APP_DATA[store.state.settings.network].CACHE + 'https://api.coingecko.com/api/v3/simple/price?ids=cardano&vs_currencies=usd')).data.cardano.usd
         const usd = amount * tokenPrice
         return {
           amount,
@@ -786,8 +786,8 @@ class Lib {
         }
       },
       async dash (key) {
-        const amount = (await axios.get(process.env[store.state.settings.network].CACHE + 'https://chainz.cryptoid.info/dash/api.dws?key=9e24784791a6&q=getbalance&a=' + key)).data
-        let tokenPrice = (await axios.get(process.env[store.state.settings.network].CACHE + 'https://api.coingecko.com/api/v3/simple/price?ids=dash&vs_currencies=usd')).data.dash.usd
+        const amount = (await axios.get(process.env.APP_DATA[store.state.settings.network].CACHE + 'https://chainz.cryptoid.info/dash/api.dws?key=9e24784791a6&q=getbalance&a=' + key)).data
+        let tokenPrice = (await axios.get(process.env.APP_DATA[store.state.settings.network].CACHE + 'https://api.coingecko.com/api/v3/simple/price?ids=dash&vs_currencies=usd')).data.dash.usd
         const usd = amount * tokenPrice
         return {
           amount,
@@ -833,7 +833,7 @@ class Lib {
 
     const web3 = this.getWeb3Instance(chain)
     if (evmData) {
-      if (evmData.gas && evmData.gas.length) { response = await axios.get(process.env[store.state.settings.network].CACHE + evmData.gas) }
+      if (evmData.gas && evmData.gas.length) { response = await axios.get(process.env.APP_DATA[store.state.settings.network].CACHE + evmData.gas) }
 
       gasData = {
         gas: gasLimit || 21000,
@@ -925,7 +925,7 @@ class Lib {
       async btc () {
         let gasOptions = []
 
-        let response = await axios.get(process.env[store.state.settings.network].CACHE + 'https://bitcoinfees.billfodl.com/api/fees/')
+        let response = await axios.get(process.env.APP_DATA[store.state.settings.network].CACHE + 'https://bitcoinfees.billfodl.com/api/fees/')
 
         /* {
             "fastestFee": "78",
@@ -1040,7 +1040,7 @@ class Lib {
         // const bitcore = require('bitcore-lib')
 
         const explorers = require('bitcore-explorers')
-        const insight = new explorers.Insight(process.env[store.state.settings.network].CACHE + 'https://explorer.btc.zelcore.io/') // 'https://insight.bitpay.com')
+        const insight = new explorers.Insight(process.env.APP_DATA[store.state.settings.network].CACHE + 'https://explorer.btc.zelcore.io/') // 'https://insight.bitpay.com')
         const network = store.state.settings.network === 'testnet' ? bitcoin.networks.testnet : bitcoin.networks.bitcoin
 
         const returnedUTXOS = await insight.getUtxos(from)
@@ -1273,7 +1273,7 @@ class Lib {
             key
           )
 
-          message = process.env[store.state.settings.network].EOS_TRANSACTION_EXPLORER + transaction.transaction_id
+          message = process.env.APP_DATA[store.state.settings.network].EOS_TRANSACTION_EXPLORER + transaction.transaction_id
           success = true
         } catch (err) {
           message = err
@@ -1401,7 +1401,7 @@ class Lib {
         //     return reject()
         //   }
         //   resolve({
-        //     message: process.env[store.state.settings.network].ETH_TRANSACTION_EXPLORER + id,
+        //     message: process.env.APP_DATA[store.state.settings.network].ETH_TRANSACTION_EXPLORER + id,
         //     success: true
         //   })
         // })
@@ -1412,7 +1412,7 @@ class Lib {
             tx.on('confirmation', (confirmationNumber, receipt) => {
               if (confirmationNumber > 2) {
                 resolve({
-                  message: process.env[store.state.settings.network].ETH_TRANSACTION_EXPLORER + transactionHash,
+                  message: process.env.APP_DATA[store.state.settings.network].ETH_TRANSACTION_EXPLORER + transactionHash,
                   success: true
                 })
               }
@@ -1491,7 +1491,7 @@ class Lib {
                       if (reseipt) {
                         if (reseipt.status == 0) {
                           resolve({
-                            message: process.env[store.state.settings.network].ETH_TRANSACTION_EXPLORER + id,
+                            message: process.env.APP_DATA[store.state.settings.network].ETH_TRANSACTION_EXPLORER + id,
                             success: true
                           })
                         } else if (transactionStatus == 1) {

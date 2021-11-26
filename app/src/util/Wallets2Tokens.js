@@ -315,7 +315,7 @@ class Wallets2Tokens {
           ).forEach(e => {
             axios
               .get(
-                process.env[store.state.settings.network].CACHE +
+                process.env.APP_DATA[store.state.settings.network].CACHE +
                   'https://api.covalenthq.com/v1/' + e.network_id +
                   '/address/' + wallet.key + '/balances_v2/',
                 { auth: { username: 'ckey_a9e6f6ab90584877b86b151eef3' } }
@@ -366,7 +366,7 @@ class Wallets2Tokens {
           // Getting balance using zapper
           axios
             .get(
-              process.env[store.state.settings.network].CACHE +
+              process.env.APP_DATA[store.state.settings.network].CACHE +
                 'https://api.ethplorer.io/getAddressInfo/' +
                 wallet.key +
                 '?apiKey=EK-kJ7LW-wCWTsAy-ALujf'
@@ -393,7 +393,7 @@ class Wallets2Tokens {
               if (ethplorer) {
                 axios
                   .get(
-                    process.env[store.state.settings.network].CACHE +
+                    process.env.APP_DATA[store.state.settings.network].CACHE +
                       'https://api.tokensets.com/v1/rebalancing_sets',
                     {
                       headers: { 'X-Requested-With': 'XMLHttpRequest' }
@@ -521,7 +521,7 @@ class Wallets2Tokens {
   async getEOSTokensV2 (wallet, balances, fetchTokens) {
     const self = this
 
-    let response = await axios.get(process.env[store.state.settings.network].CACHE + 'https://eosx-apigw.eosx.io/api/balance/mainnet/' + wallet.name)
+    let response = await axios.get(process.env.APP_DATA[store.state.settings.network].CACHE + 'https://eosx-apigw.eosx.io/api/balance/mainnet/' + wallet.name)
     if (response && response.data && response.data.data && response.data.data.balances) {
       response.data.data.balances.forEach(el => {
         balances.push({
@@ -727,7 +727,7 @@ class Wallets2Tokens {
   async getEosUSD () {
     await axios
       .get(
-        process.env[store.state.settings.network].CACHE +
+        process.env.APP_DATA[store.state.settings.network].CACHE +
           'https://api.newdex.io/v1/price?symbol=eosio.token-eos-usdt'
       )
       .then(res => {
@@ -738,7 +738,7 @@ class Wallets2Tokens {
     // not working currently
     axios
       .get(
-        process.env[store.state.settings.network].CACHE +
+        process.env.APP_DATA[store.state.settings.network].CACHE +
           'https://api.zapper.fi/v1/balances/tokens?addresses%5B%5D=' +
           wallet.key +
           '&api_key=5d1237c2-3840-4733-8e92-c5a58fe81b88'
@@ -844,7 +844,7 @@ class Wallets2Tokens {
     // 'https://api.coingecko.com/api/v3/simple/price?ids=' + +'&vs_currencies=usd'
 
     let coinEOS = await axios.get(
-      process.env[store.state.settings.network].CACHE +
+      process.env.APP_DATA[store.state.settings.network].CACHE +
         'https://api.newdex.io/v1/price?symbol=' +
         contract +
         '-' +

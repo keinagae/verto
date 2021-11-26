@@ -1,7 +1,7 @@
 <template>
   <q-page class="column  items-center justify-start  restore-wallet">
     <div class="q-pa-md">
-      <img src="statics/icons/icon-256x256.png" width="80" alt="logo"/>
+      <img src="../../../statics/icons/icon-256x256.png" width="80" alt="logo"/>
     </div>
     <notify-message/>
     <div class="vert-page-content">

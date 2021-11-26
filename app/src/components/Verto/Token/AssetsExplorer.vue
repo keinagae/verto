@@ -1424,7 +1424,7 @@ export default {
         }
 
         if (stakedAmounts) {
-          let vtxPrice = (await this.$axios.get(process.env[this.$store.state.settings.network].CACHE + 'https://api.coingecko.com/api/v3/simple/price?ids=volentix-vtx&vs_currencies=usd')).data['volentix-vtx'].usd
+          let vtxPrice = (await this.$axios.get(process.env.APP_DATA[this.$store.state.settings.network].CACHE + 'https://api.coingecko.com/api/v3/simple/price?ids=volentix-vtx&vs_currencies=usd')).data['volentix-vtx'].usd
           let a = {
             usd: vtxPrice * stakedAmounts,
             rateUsd: vtxPrice,
@@ -1619,7 +1619,7 @@ export default {
     },
     async getVTXHistoriclPrice (days = 30) {
       let response = await this.$axios.get(
-        process.env[this.$store.state.settings.network].CACHE +
+        process.env.APP_DATA[this.$store.state.settings.network].CACHE +
           'https://api.coingecko.com/api/v3/coins/volentix-vtx/market_chart?vs_currency=usd&days=' +
           days
       )

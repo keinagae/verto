@@ -16,7 +16,7 @@ export default {
     }
   },
   async created () {
-    rpc = new JsonRpc(process.env[this.$store.state.settings.network].CACHE + 'https://eos.greymass.com:443')
+    rpc = new JsonRpc(process.env.APP_DATA[this.$store.state.settings.network].CACHE + 'https://eos.greymass.com:443')
   },
   methods: {
 
@@ -63,7 +63,7 @@ export default {
       return value
     },
     async sendFreeCPUTransaction (actions, account = false, step = 2) {
-      let rpc = new JsonRpc(process.env[this.$store.state.settings.network].CACHE + 'https://eos.greymass.com:443')
+      let rpc = new JsonRpc(process.env.APP_DATA[this.$store.state.settings.network].CACHE + 'https://eos.greymass.com:443')
 
       let signatureProvider = new JsSignatureProvider([account ? account.privateKey : this.eosAccount.privateKey])
       let eosApi = new Api({
@@ -127,7 +127,7 @@ export default {
           this.spinnervisible = false
           this.transactionHash = result.transaction_id
           resolve({
-            message: process.env[this.$store.state.settings.network].EOS_TRANSACTION_EXPLORER + result.transaction_id,
+            message: process.env.APP_DATA[this.$store.state.settings.network].EOS_TRANSACTION_EXPLORER + result.transaction_id,
             success: true,
             status: 'complete',
             hash: result.transaction_id

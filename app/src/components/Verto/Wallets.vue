@@ -1110,10 +1110,10 @@ export default {
     launchExplorer (tx) {
       switch (this.$store.state.currentwallet.wallet.chain) {
         case 'eos':
-          openURL(process.env[this.$store.state.settings.network].EOS_TRANSACTION_EXPLORER + tx)
+          openURL(process.env.APP_DATA[this.$store.state.settings.network].EOS_TRANSACTION_EXPLORER + tx)
           break
         case 'eth':
-          openURL(process.env[this.$store.state.settings.network].ETH_TRANSACTION_EXPLORER + tx)
+          openURL(process.env.APP_DATA[this.$store.state.settings.network].ETH_TRANSACTION_EXPLORER + tx)
           break
         default:
           break

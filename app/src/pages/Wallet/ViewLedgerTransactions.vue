@@ -358,11 +358,11 @@ export default {
     },
     async getTransactionHistory () {
       // get them from the demux api of the vtx ledger contract
-      let result = await this.$axios.get(process.env[this.$store.state.settings.network].DEMUX_API + '/ledger/' + this.walletKey + '?skip=0&limit=100')
+      let result = await this.$axios.get(process.env.APP_DATA[this.$store.state.settings.network].DEMUX_API + '/ledger/' + this.walletKey + '?skip=0&limit=100')
 
       if (this.$store.state.currentwallet.wallet.type === 'eos') {
         // get them from the eos token side of things
-        let eosresult = await this.$axios.get(process.env[this.$store.state.settings.network].DEMUX_API + '/eos/' + this.walletName + '?skip=0&limit=100')
+        let eosresult = await this.$axios.get(process.env.APP_DATA[this.$store.state.settings.network].DEMUX_API + '/eos/' + this.walletName + '?skip=0&limit=100')
 
         // the two APIs don't have the same output so let's map it out.
         var self = this

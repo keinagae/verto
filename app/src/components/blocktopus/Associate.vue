@@ -9,7 +9,7 @@ export default {
   // name: 'ComponentName',
   data () {
     return {
-      blocktopusLink: process.env[this.$store.state.settings.network].BLOCKTOPUS_URL + '/token_buyers/sign_in?verto_public_address=' + this.$store.state.currentwallet.wallet.key
+      blocktopusLink: process.env.APP_DATA[this.$store.state.settings.network].BLOCKTOPUS_URL + '/token_buyers/sign_in?verto_public_address=' + this.$store.state.currentwallet.wallet.key
     }
   },
   beforeMount () {

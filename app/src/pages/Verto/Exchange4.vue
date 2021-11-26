@@ -911,7 +911,7 @@ import store from '@/store'
 
 const url = 'https://api.coinswitch.co'
 let headers = {
-  'x-api-key': process.env[store.state.settings.network].COINSWITCH_APIKEY
+  'x-api-key': process.env.APP_DATA[store.state.settings.network].COINSWITCH_APIKEY
 }
 
 const typeUpper = function (thing) {
@@ -1590,7 +1590,7 @@ export default {
     async getRate () {
       const self = this
       if (self.destinationCoin.value === 'vtx') {
-        this.vtxEosPrice = (await this.$axios.get(process.env[this.$store.state.settings.network].CACHE + 'https://api.newdex.io/v1/price?symbol=volentixgsys-vtx-eos')).data.data.price
+        this.vtxEosPrice = (await this.$axios.get(process.env.APP_DATA[this.$store.state.settings.network].CACHE + 'https://api.newdex.io/v1/price?symbol=volentixgsys-vtx-eos')).data.data.price
       }
       this.$axios.post(url + '/v2/rate', {
         depositCoin: self.depositCoin.value,

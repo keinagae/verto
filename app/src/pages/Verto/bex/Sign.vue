@@ -1,7 +1,7 @@
 <template>
   <q-page class="column items-center justify-start login-page">
     <div class="q-pa-md">
-      <img src="statics/icons/icon-256x256.png" width="170" alt="logo"/>
+      <img src="../../../statics/icons/icon-256x256.png" width="170" alt="logo"/>
     </div>
     <notify-message/>
     <div class="standard-content col-grow">

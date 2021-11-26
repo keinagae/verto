@@ -4,7 +4,7 @@ import store from '@/store'
 
 export const getTokenList = ({ commit, state }, payload) => {
   axios
-    .get(process.env[store.state.settings.network].CACHE + 'https://api.coingecko.com/api/v3/coins/list?include_platform=true')
+    .get(process.env.APP_DATA[store.state.settings.network].CACHE + 'https://api.coingecko.com/api/v3/coins/list?include_platform=true')
     .then(result => {
       commit('setTokenList', result.data)
     })
@@ -14,7 +14,7 @@ export const getTokenMarketData = ({ commit, state }, ids) => {
   state.pending = state.pending.concat(ids)
   axios
     .get(
-      process.env[store.state.settings.network].CACHE + 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=' +
+      process.env.APP_DATA[store.state.settings.network].CACHE + 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=' +
         ids.join(',') +
         '&price_change_percentage=24h'
     )
@@ -53,7 +53,7 @@ export const getTokensMarketsData = ({ commit, state }, tokens) => {
 
     axios
       .get(
-        process.env[store.state.settings.network].CACHE + 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=' +
+        process.env.APP_DATA[store.state.settings.network].CACHE + 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=' +
           list +
           '&price_change_percentage=24h'
       )
@@ -76,7 +76,7 @@ export const getEvmsTokensData = ({ commit }) => {
     if ([1, 56, 137].includes(e.network_id)) {
       axios
         .get(
-          process.env[store.state.settings.network].CACHE +
+          process.env.APP_DATA[store.state.settings.network].CACHE +
             'https://api.1inch.exchange/v3.0/' +
             e.network_id +
             '/tokens'
@@ -101,7 +101,7 @@ export const getEvmsTokensData = ({ commit }) => {
     } else {
       axios
         .get(
-          process.env[store.state.settings.network].CACHE +
+          process.env.APP_DATA[store.state.settings.network].CACHE +
             'https://api.covalenthq.com/v1/' +
             e.network_id +
             '/tokens/tokenlists/all/',

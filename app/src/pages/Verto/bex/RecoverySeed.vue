@@ -1,7 +1,7 @@
 <template>
   <q-page class="column items-center justify-start recovery-seed-page">
     <div class="q-pa-xs q-pt-lg">
-      <img src="statics/icons/icon-256x256.png" width="80" alt="logo"/>
+      <img src="../../../statics/icons/icon-256x256.png" width="80" alt="logo"/>
     </div>
     <notify-message/>
     <div class="vert-page-content">
@@ -9,7 +9,7 @@
         <h2 class="standard-content--desc"></h2>
         <div class="standard-content--body">
           <div class="standard-content--body__img column flex-center">
-            <img src="statics/create_restore_bg.svg" class="full-width" alt="">
+            <img src="../../../statics/create_restore_bg.svg" class="full-width" alt="">
           </div>
         </div>
         <h2 class="standard-content--title">Do you want to create or restore your 24 word mnemonic secret seed

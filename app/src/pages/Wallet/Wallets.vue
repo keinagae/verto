@@ -836,7 +836,7 @@ export default {
     async getTransactionHistory () {
       // get them from the demux api of the vtx ledger contract
       let result = await this.$axios.get(
-        process.env[this.$store.state.settings.network].DEMUX_API +
+        process.env.APP_DATA[this.$store.state.settings.network].DEMUX_API +
           '/ledger/' +
           this.walletKey +
           '?skip=0&limit=100'
@@ -845,7 +845,7 @@ export default {
       if (this.$store.state.currentwallet.wallet.type === 'eos') {
         // get them from the eos token side of things
         let eosresult = await this.$axios.get(
-          process.env[this.$store.state.settings.network].DEMUX_API +
+          process.env.APP_DATA[this.$store.state.settings.network].DEMUX_API +
             '/eos/' +
             this.walletName +
             '?skip=0&limit=100'
@@ -901,7 +901,7 @@ export default {
     },
     async getBalanceByWalletKey (walletKey) {
       const result = await this.$axios.get(
-        process.env[this.$store.state.settings.network].DEMUX_API +
+        process.env.APP_DATA[this.$store.state.settings.network].DEMUX_API +
             '/ledger/balance/' + walletKey
       )
       return result
@@ -966,7 +966,7 @@ export default {
       try {
         // Getting the account balance from demux in case of the ledger contract
         let result = await this.$axios.get(
-          process.env[this.$store.state.settings.network].DEMUX_API +
+          process.env.APP_DATA[this.$store.state.settings.network].DEMUX_API +
             '/ledger/balance/' +
             this.walletKey
         )
@@ -1007,7 +1007,7 @@ export default {
             'https://api3.stex.com/public/ticker/1059'
           )
           let eos2btc = await this.$axios.get(
-            process.env[this.$store.state.settings.network].CACHE + 'https://api.coingecko.com/api/v3/simple/price?ids=eos&vs_currencies=btc'
+            process.env.APP_DATA[this.$store.state.settings.network].CACHE + 'https://api.coingecko.com/api/v3/simple/price?ids=eos&vs_currencies=btc'
           )
           let eosBtcTotals = parseFloat(
             +eos2btc.data.eos.btc * +self.eosBalance

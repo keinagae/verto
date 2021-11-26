@@ -226,7 +226,7 @@ export default {
       this.spinnervisible = true
       const self = this
       this.$axios.post(
-        process.env[this.$store.state.settings.network].VENUE_URL + 'api/assign-verto-address',
+        process.env.APP_DATA[this.$store.state.settings.network].VENUE_URL + 'api/assign-verto-address',
         {
           verto_address: this.$store.state.currentwallet.wallet.key,
           username: this.venueUserName,
@@ -276,7 +276,7 @@ export default {
       }
       const self = this
       this.$axios.post(
-        process.env[this.$store.state.settings.network].VENUE_URL + '/api/assign-verto-address',
+        process.env.APP_DATA[this.$store.state.settings.network].VENUE_URL + '/api/assign-verto-address',
         {
           verto_address: self.$store.state.currentwallet.wallet.key,
           username: self.venueUserName,

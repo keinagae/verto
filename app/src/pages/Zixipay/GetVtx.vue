@@ -142,7 +142,7 @@ export default {
         description: 'Getting VTX',
         amount: 0,
         currency: 'USD',
-        merchantid: process.env[this.$store.state.settings.network].ZIXIPAY_MERCHANT_ID
+        merchantid: process.env.APP_DATA[this.$store.state.settings.network].ZIXIPAY_MERCHANT_ID
       },
       lazy: [],
       zixiusername: '',
@@ -182,7 +182,7 @@ export default {
     submit () {
       const custom = 'crowdfund:' + this.$store.state.currentwallet.wallet.key + ':' + now.getTime() // + ':1554818157020' //
       const self = this
-      const url = process.env[this.$store.state.settings.network].CROWDFUND_URL + 'public/api/zixipay-create-hash/'
+      const url = process.env.APP_DATA[this.$store.state.settings.network].CROWDFUND_URL + 'public/api/zixipay-create-hash/'
 
       this.$axios.post(
         url,

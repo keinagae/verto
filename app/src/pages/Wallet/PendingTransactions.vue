@@ -531,7 +531,7 @@ export default {
       }
     },
     async getPendingTransactions () {
-      const url = process.env[this.$store.state.settings.network].CROWDFUND_URL + '/public/api/investor-transactions?verto_public_address=' + this.$store.state.currentwallet.wallet.key + '&status_code=' + this.transactionStatus
+      const url = process.env.APP_DATA[this.$store.state.settings.network].CROWDFUND_URL + '/public/api/investor-transactions?verto_public_address=' + this.$store.state.currentwallet.wallet.key + '&status_code=' + this.transactionStatus
       let results = await axios.get(url)
       this.tableData = results.data
       if (this.transactionStatus === 'CONVERTED') {

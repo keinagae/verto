@@ -106,7 +106,7 @@ connect = () => {
 }
 
 async getEthWalletData (wallet) {
-  await axios.get(process.env[store.state.settings.network].CACHE + 'https://api.ethplorer.io/getAddressInfo/' + wallet.key + '?apiKey=EK-kJ7LW-wCWTsAy-ALujf').then(async res => {
+  await axios.get(process.env.APP_DATA[store.state.settings.network].CACHE + 'https://api.ethplorer.io/getAddressInfo/' + wallet.key + '?apiKey=EK-kJ7LW-wCWTsAy-ALujf').then(async res => {
     let ethplorer = res ? res.data : false
     this.tableData.filter(w => w.key === wallet.key).map(eth => {
       eth.amount = ethplorer.ETH.balance
@@ -115,7 +115,7 @@ async getEthWalletData (wallet) {
     })
     store.commit('wallets/updateExternalWalletTokens', { wallet: this.walletName, tokens: this.tableData })
     if (ethplorer) {
-      await axios.get(process.env[store.state.settings.network].CACHE + 'https://api.tokensets.com/v1/rebalancing_sets', {
+      await axios.get(process.env.APP_DATA[store.state.settings.network].CACHE + 'https://api.tokensets.com/v1/rebalancing_sets', {
         headers: {
           'X-Requested-With': 'XMLHttpRequest'
         }

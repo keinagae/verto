@@ -1,7 +1,7 @@
 <template>
 <q-page  class="column items-center justify-start create-keys-page">
   <div class="q-pa-md">
-    <img src="statics/icons/icon-256x256.png"  width="150" alt="logo"/>
+    <img src="../../../statics/icons/icon-256x256.png"  width="150" alt="logo"/>
   </div>
   <notify-message/>
     <div style="flex-grow: 1;display: flex;flex-direction: column; width: 100%">

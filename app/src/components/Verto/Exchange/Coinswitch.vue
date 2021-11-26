@@ -1404,7 +1404,7 @@ import store from '@/store'
 import ExternalWallets from '@/util/ExternalWallets'
 const url = 'http://api.godex.io/api/v1/'
 let headers = {
-  'x-api-key': process.env[store.state.settings.network].COINSWITCH_APIKEY
+  'x-api-key': process.env.APP_DATA[store.state.settings.network].COINSWITCH_APIKEY
 }
 
 const typeUpper = function (thing) {
@@ -2797,7 +2797,7 @@ export default {
       let vtxAmount = false
 
       if (!this.eThToVTXPrice) {
-        let response = await this.$axios.get(process.env[this.$store.state.settings.network].CACHE + 'https://api.coingecko.com/api/v3/simple/price?ids=volentix-vtx&vs_currencies=eth')
+        let response = await this.$axios.get(process.env.APP_DATA[this.$store.state.settings.network].CACHE + 'https://api.coingecko.com/api/v3/simple/price?ids=volentix-vtx&vs_currencies=eth')
         if (response.data && response.data['volentix-vtx'] && response.data['volentix-vtx'].eth) {
           this.eThToVTXPrice = parseFloat(response.data['volentix-vtx'].eth)
         }
@@ -2836,7 +2836,7 @@ export default {
     async getRate () {
       const self = this
       if (self.destinationCoin.value === 'vtx') {
-        this.vtxEosPrice = (await this.$axios.get(process.env[this.$store.state.settings.network].CACHE + 'https://api.newdex.io/v1/price?symbol=volentixgsys-vtx-eos')).data.data.price
+        this.vtxEosPrice = (await this.$axios.get(process.env.APP_DATA[this.$store.state.settings.network].CACHE + 'https://api.newdex.io/v1/price?symbol=volentixgsys-vtx-eos')).data.data.price
       }
       this.isLoading = true
       this.ErrorMessage = ''

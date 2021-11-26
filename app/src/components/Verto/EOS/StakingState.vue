@@ -94,7 +94,7 @@ export default {
   }),
   async mounted () {
     this.getHistoryData()
-    const rpc = new EosRPC(process.env[this.$store.state.settings.network].EOS_HISTORYAPI)
+    const rpc = new EosRPC(process.env.APP_DATA[this.$store.state.settings.network].EOS_HISTORYAPI)
     let data = await rpc.getTableByScope(
       'vertostaking',
       'vertostaking',

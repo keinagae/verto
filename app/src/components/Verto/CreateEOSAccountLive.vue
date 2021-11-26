@@ -961,7 +961,7 @@ export default {
     }
 
     let rpc = new JsonRpc(
-      process.env[this.$store.state.settings.network].CACHE +
+      process.env.APP_DATA[this.$store.state.settings.network].CACHE +
        'https://eos.greymass.com:443'
     )
     this.pairs = (

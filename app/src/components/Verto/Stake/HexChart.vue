@@ -32,7 +32,7 @@ export default {
         'kbn-version': '7.13.3'
       }
     }
-    this.$axios.post(process.env[this.$store.state.settings.network].CACHE + 'https://hex.vision/api/metrics/vis/data', HexChartPayload, config)
+    this.$axios.post(process.env.APP_DATA[this.$store.state.settings.network].CACHE + 'https://hex.vision/api/metrics/vis/data', HexChartPayload, config)
       .then((res) => {
         let data = res.data['61ca57f0-469d-11e7-af02-69e470af7417'].series
         console.log(this.chartData, 99)

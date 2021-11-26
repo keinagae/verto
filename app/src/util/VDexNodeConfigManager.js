@@ -52,7 +52,7 @@ class VDexNodeConfigManager {
   currentWallet
 
   constructor () {
-    this.rpcWrapper = new EosRPC(process.env[store.state.settings.network].EOS_HISTORYAPI)
+    this.rpcWrapper = new EosRPC(process.env.APP_DATA[store.state.settings.network].EOS_HISTORYAPI)
     // this.rpc = new JsonRpc('https:////api.eosio.cr', { fetch })
   }
 
@@ -118,7 +118,7 @@ class VDexNodeConfigManager {
       eos_endpoint: {
         type: 'string',
         format: 'url',
-        default: process.env[store.state.settings.network].EOS_HISTORYAPI // 'https://eos.greymass.com:443'
+        default: process.env.APP_DATA[store.state.settings.network].EOS_HISTORYAPI // 'https://eos.greymass.com:443'
       },
       nodes_api: {
         type: 'string',

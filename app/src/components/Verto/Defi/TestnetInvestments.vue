@@ -131,7 +131,7 @@ export default {
     }
   },
   async created () {
-    testnetRpc = new EosRPC(process.env[this.$store.state.settings.network].EOS_HISTORYAPI)
+    testnetRpc = new EosRPC(process.env.APP_DATA[this.$store.state.settings.network].EOS_HISTORYAPI)
 
     if (!this.$store.state.investment.testnetEOSInvestments.length) {
       this.coins = this.getAllCoins()

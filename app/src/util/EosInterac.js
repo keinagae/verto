@@ -18,7 +18,7 @@ let volentixContract = 'volentixtsys'// 'volentixgsys'
 
 class EosRPC {
   constructor (endpoint = null) {
-    this.rpc = new JsonRpc(endpoint || process.env[store.state.settings.network].EOS_HISTORYAPI, { fetch })
+    this.rpc = new JsonRpc(endpoint || process.env.APP_DATA[store.state.settings.network].EOS_HISTORYAPI, { fetch })
   }
 
   privateToPublic (wif) {

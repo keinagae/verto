@@ -480,7 +480,7 @@ export default {
       this.navigation.showSendModal = visible
     },
     launchEosExplorer (event) {
-      openURL(process.env[this.$store.state.settings.network].EOS_TRANSACTION_EXPLORER + this.transactionId)
+      openURL(process.env.APP_DATA[this.$store.state.settings.network].EOS_TRANSACTION_EXPLORER + this.transactionId)
     },
     async sendTokens () {
       if (!this.navigationButtons.privateKeyPasswordBtn) {

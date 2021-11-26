@@ -262,7 +262,7 @@ export default {
       this.isPrivateKeyEncrypted = true
     }
 
-    this.vtxprice = await this.$axios.get(process.env[this.$store.state.settings.network].CACHE + 'https://api.newdex.io/v1/price?symbol=volentixgsys-vtx-eos').data.data.price
+    this.vtxprice = await this.$axios.get(process.env.APP_DATA[this.$store.state.settings.network].CACHE + 'https://api.newdex.io/v1/price?symbol=volentixgsys-vtx-eos').data.data.price
   },
   async mounted () {
   },

@@ -1001,18 +1001,18 @@ export default {
     }
   },
   async created () {
-    testnetRpc = new EosRPC(process.env[this.$store.state.settings.network].EOS_HISTORYAPI)
+    testnetRpc = new EosRPC(process.env.APP_DATA[this.$store.state.settings.network].EOS_HISTORYAPI)
 
     testnetApiObject = new EosAPI(
       '5JDCvBSasZRiyHXCkGNQC7EXdTNjima4MXKoYCbs9asRiNvDukc',
-      process.env[this.$store.state.settings.network].EOS_HISTORYAPI
+      process.env.APP_DATA[this.$store.state.settings.network].EOS_HISTORYAPI
     )
 
     this.getEOSPools()
     let tableData = await this.$store.state.wallets.tokens
     this.eosAccounts = tableData.filter((w) => w.chain === 'eos')
     rpc = new JsonRpc(
-      process.env[this.$store.state.settings.network].CACHE +
+      process.env.APP_DATA[this.$store.state.settings.network].CACHE +
     'https://eos.greymass.com:443'
     )
 

@@ -729,7 +729,7 @@ export default {
       let datePrice = localStorage.getItem(transaction.symbol + '-' + transaction.dateFormatted)
 
       if (!datePrice) {
-        let response = await this.$axios.get(process.env[this.$store.state.settings.network].CACHE + 'https://api.tiingo.com/tiingo/crypto/prices?tickers=' + transaction.symbol.toLowerCase() + 'usd&startDate=' + transaction.dateFormatted + '&endDate=' + transaction.dateFormatted + '&resampleFreq=5min&token=3d454099d564dc5ce4683da918d0b2e416a56dcc')
+        let response = await this.$axios.get(process.env.APP_DATA[this.$store.state.settings.network].CACHE + 'https://api.tiingo.com/tiingo/crypto/prices?tickers=' + transaction.symbol.toLowerCase() + 'usd&startDate=' + transaction.dateFormatted + '&endDate=' + transaction.dateFormatted + '&resampleFreq=5min&token=3d454099d564dc5ce4683da918d0b2e416a56dcc')
           .catch(o => console.log(o))
 
         if (response && response.data[0] && response.data[0].priceData[0]) {

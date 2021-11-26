@@ -1,6 +1,16 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const env_values = require('./.quasar.env.json')
+console.log(env_values)
 module.exports = function (ctx) {
+  console.log(ctx)
+  let ENV_VALUES = {}
+  if (ctx.dev) {
+    ENV_VALUES = env_values['development']
+  } else if (ctx.prod) {
+    ENV_VALUES = env_values['production']
+  }
+  console.log(ENV_VALUES)
   return {
     vendor: {
       disable: false
@@ -131,15 +141,18 @@ module.exports = function (ctx) {
     supportIE: true,
 
     build: {
+      env: {
+        APP_DATA: ENV_VALUES
+      },
       uglifyOptions: {
         keep_fnames: true,
-        compress: { drop_console: true }
+        compress: {drop_console: true}
       },
       scopeHoisting: true,
       vueRouterMode: 'history',
       extractCSS: true,
       transpile: true,
-      extendWebpack (cfg) {
+      extendWebpack(cfg) {
         cfg.resolve.alias = {
           ...cfg.resolve.alias,
           '@': path.resolve(__dirname, './src')
@@ -249,7 +262,7 @@ module.exports = function (ctx) {
       // noIosLegacyBuildFlag: true // uncomment only if you know what you are doing
     },
     bex: {
-      extendWebpack (cfg) {
+      extendWebpack(cfg) {
         cfg.optimization.splitChunks = {
           // include all types of chunks
           cacheGroups: {
@@ -270,7 +283,7 @@ module.exports = function (ctx) {
     },
     electron: {
       bundler: 'builder', // or 'packager'
-      extendWebpack (cfg) {
+      extendWebpack(cfg) {
         // do something with Electron process Webpack cfg
       },
       // chainWebpack (chain) {
@@ -328,11 +341,11 @@ module.exports = function (ctx) {
             'type': 'link',
             'path': '/Applications'
           },
-          {
-            'x': 130,
-            'y': 150,
-            'type': 'file'
-          }
+            {
+              'x': 130,
+              'y': 150,
+              'type': 'file'
+            }
           ]
         },
         'mac': {

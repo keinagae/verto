@@ -3,7 +3,7 @@ import { openURL, Platform } from 'quasar'
 
 class DocumentationManger {
   openDocumentation (documentName) {
-    const link = process.env[store.state.settings.network].READ_THE_DOCS + documentName + '.html'
+    const link = process.env.APP_DATA[store.state.settings.network].READ_THE_DOCS + documentName + '.html'
     if (Platform.is.cordova) {
       window.open(link, '_system')
     } else {

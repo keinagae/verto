@@ -766,7 +766,7 @@ export default {
     this.sendAmount = parseInt(this.currentAccount.amount)
     this.getStakingObject()
 
-    /* this.$axios.get(process.env[this.$store.state.settings.network].CACHE + 'https://go.hex.com/data/event-batch-7-3.hxb')
+    /* this.$axios.get(process.env.APP_DATA[this.$store.state.settings.network].CACHE + 'https://go.hex.com/data/event-batch-7-3.hxb')
       .then(res => {
         console.log(res, ' res')
       })
@@ -797,12 +797,12 @@ export default {
         stake: this.sendAmount,
         days: this.daysNumber,
         chosencurrency: 'USD',
-        hex_price_prediction: (await this.$axios.get(process.env[this.$store.state.settings.network].CACHE + 'https://api.coingecko.com/api/v3/simple/price?ids=hex&vs_currencies=usd')).data.hex.usd
+        hex_price_prediction: (await this.$axios.get(process.env.APP_DATA[this.$store.state.settings.network].CACHE + 'https://api.coingecko.com/api/v3/simple/price?ids=hex&vs_currencies=usd')).data.hex.usd
       }
       this.spinnerVisible = true
       this.$axios
         .post(
-          process.env[this.$store.state.settings.network].CACHE +
+          process.env.APP_DATA[this.$store.state.settings.network].CACHE +
             'https://hexcalc.net/index.php',
           this.toFormData(data)
         )

@@ -530,10 +530,10 @@ export default {
     async switchNetwork () {
       this.$store.dispatch('settings/toggleNetwork', this.network.value)
       Vue.prototype.$rpc = new EosRPC(
-        process.env[this.$store.state.settings.network].EOS_HISTORYAPI
+        process.env.APP_DATA[this.$store.state.settings.network].EOS_HISTORYAPI
       )
       Vue.prototype.$vDexNodeConfigManager = new VDexNodeConfigManager(
-        process.env[this.$store.state.settings.network].EOS_HISTORYAPI
+        process.env.APP_DATA[this.$store.state.settings.network].EOS_HISTORYAPI
       )
       await initWallet()
     },

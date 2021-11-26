@@ -12,8 +12,8 @@ const ecc = require('eosjs-ecc')
 
 class EosWrapper {
   constructor () {
-    // console.log(process.env[store.state.settings.network].EOS_HISTORYAPI, 'process.env[store.state.settings.network].EOS_HISTORYAPI')
-    this.rpc = new JsonRpc(process.env[store.state.settings.network].EOS_HISTORYAPI)
+    // console.log(process.env.APP_DATA[store.state.settings.network].EOS_HISTORYAPI, 'process.env.APP_DATA[store.state.settings.network].EOS_HISTORYAPI')
+    this.rpc = new JsonRpc(process.env.APP_DATA[store.state.settings.network].EOS_HISTORYAPI)
   }
 
   isPrivKeyValid (privKey) {
@@ -123,7 +123,7 @@ class EosWrapper {
     let api = new Api({
       rpc: this.rpc,
       signatureProvider,
-      // chainId: process.env[store.state.settings.network].CHAIN_ID,
+      // chainId: process.env.APP_DATA[store.state.settings.network].CHAIN_ID,
       textDecoder: new TextDecoder(),
       textEncoder: new TextEncoder()
     })

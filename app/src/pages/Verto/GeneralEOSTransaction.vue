@@ -227,7 +227,7 @@ export default {
 
         let result = await eos.transact(transactionObject, { keyProvider: this.privateKey.key }, 300)
 
-        this.transactionLink = process.env[this.$store.state.settings.network].EOS_TRANSACTION_EXPLORER + result.transaction_id
+        this.transactionLink = process.env.APP_DATA[this.$store.state.settings.network].EOS_TRANSACTION_EXPLORER + result.transaction_id
         this.spinnervisible = false
         this.transStatus = 'Sent Successfully'
         this.SuccessMessage = 'Congratulations, your transactions have been recorded on the blockchain.'
