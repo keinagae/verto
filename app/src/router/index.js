@@ -27,7 +27,6 @@ Vue.use(VueRouter)
 const originalPush = VueRouter.prototype.push
 VueRouter.prototype.push = function push (location) {
   return originalPush.call(this, location).catch(err => {
-    console.log(err, 'err')
     if (err.name !== 'NavigationDuplicated') throw err
   })
 }
@@ -50,8 +49,6 @@ export default function (/* { store, ssrContext } */) {
   Router.beforeEach((to, from, next) => {
     const appStarted = sessionStorage.getItem('app_started')
     const routerLoaded = sessionStorage.getItem('router_loaded')
-    const lastRoute = localStorage.getItem('last_route') ? JSON.parse(localStorage.getItem('last_route')) : null
-    console.log('navigating to route', to.name, lastRoute)
     if (appStarted != null && routerLoaded != null && ['connectv1', 'receive'].includes(to.name)) {
       const route = {
         name: to.name,

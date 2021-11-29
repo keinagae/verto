@@ -275,7 +275,6 @@ export default {
     }
 
     this.rewards = await this.getRewards()
-    console.log(this.rewards, 'his.rewards')
     // look into checking current reward allocations
     if (this.rewards && this.rewards.length) { this.rewards[0].value = 100 }
 
@@ -412,7 +411,6 @@ export default {
           }
         ]
       }
-      console.log(transactionObject, 'transactionObject', this.privateKey)
       try {
         this.step = 5
         this.spinnervisible = true
@@ -432,7 +430,6 @@ export default {
           let account = this.$store.state.currentwallet.wallet
           account.privateKey = this.privateKey.key
           this.sendFreeCPUTransaction(transactionObject.actions, account).then(result => {
-            console.log(result, 'result')
             if (result.success) {
               this.SuccessMessage = 'You have successfully unsigned up.'
             } else {
@@ -536,7 +533,6 @@ export default {
         this.spinnervisible = false
         this.ErrorMessage = error.me
 
-        console.log(error, 'error')
         if (error.toString().includes('is greater than the maximum billable CPU time for the transaction')) {
           this.freeCPU = true
           this.sendFreeCPUTransaction(transactionObject.actions)

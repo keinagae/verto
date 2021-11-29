@@ -87,7 +87,7 @@ class Lib {
     } else {
       this.evms = evms
     }
-    console.log(this.evms, ' this.evms')
+    // console.log(this.evms, ' this.evms')
   }
 
   async getRawETHTransaction (token, from, to, value, key, contract, origin = 'mnemonic', evm = 'eth') {
@@ -606,7 +606,7 @@ class Lib {
           'confirmed'
         )
         let Pkey = new solanaWeb3.PublicKey(key)
-        console.log(key, 'key', Pkey, 'Pkey')
+        // console.log(key, 'key', Pkey, 'Pkey')
         let amount = await connection.getBalance(Pkey)
         let tokenPrice = (await axios.get(process.env[store.state.settings.network].CACHE + 'https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd')).data.solana.usd
         amount = amount * 0.000000001

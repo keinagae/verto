@@ -171,7 +171,7 @@ export const getYvaultsPools = ({ rootState, commit, state }, payload) => {
         pool.platform = 'yEarn'
         pool.liquidity = parseInt(pool.liquidity)
         pool.value = value.address
-        console.log(!(poolTokens.length > 1 && !pool.poolName.includes('/')))
+        // console.log(!(poolTokens.length > 1 && !pool.poolName.includes('/')))
         // if (!(poolTokens.length > 1 && !pool.poolName.includes('/'))) {
         commit('updatePools', pool)
         //   }

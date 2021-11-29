@@ -17,7 +17,7 @@ class Wallets2Tokens {
     let ethWallet = null
     this.tableDataCache = []
     this.tableData = []
-    console.log('walletName', data)
+    // console.log('walletName', data)
     // store.state.wallets.portfolioTotal = 0
     /*
     store.state.currentwallet.config.keys.push({
@@ -52,7 +52,7 @@ class Wallets2Tokens {
         return
       }
     }
-    console.log('walletName 3', data)
+    // console.log('walletName 3', data)
     this.eos = new EosWrapper()
     const self = this
     self.eosUSD = 0
@@ -61,7 +61,7 @@ class Wallets2Tokens {
     this.tableData = [...store.state.currentwallet.config.keys].filter(
       w => (!walletName || (w.name.toLowerCase() === walletName.toLowerCase() && !ethWallet)) || (ethWallet && w.key.toLowerCase() === ethWallet.key.toLowerCase())
     )
-    console.log(this.tableData, walletName, 'walletName 4')
+    // console.log(this.tableData, walletName, 'walletName 4')
     if (store.state.settings.network === 'testnet') {
       this.tableData = this.tableData.filter(o => o.origin === 'eos_testnet')
       this.tableData.map(async wallet => {

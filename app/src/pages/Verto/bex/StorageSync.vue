@@ -9,7 +9,6 @@ import configManager from '@/util/ConfigManager'
 export default {
   name: 'StorageSync',
   async mounted () {
-    console.log('route loaded')
     sessionStorage.setItem('router_loaded', true)
     const routerLoaded = sessionStorage.getItem('app_started')
     if (routerLoaded == null) {
@@ -47,7 +46,6 @@ export default {
       const lastRoute = localStorage.getItem('last_route') ? JSON.parse(localStorage.getItem('last_route')) : null
       console.log(lastRoute, 'lastRoute 2')
       if (lastRoute && this.$route.name !== lastRoute.name && !['connectv1', 'storesync', 'login'].includes(lastRoute.name)) {
-        console.log('loading existing route ', lastRoute.path)
         this.$router.push({
           name: lastRoute.name,
           query: lastRoute.query,
@@ -62,7 +60,6 @@ export default {
         } else {
           const hasConfig = !!await configManager.hasVertoConfig()
           if (!hasConfig) {
-            console.log('moving to setup')
             this.$router.push({
               name: 'setup',
               params: {
@@ -70,7 +67,6 @@ export default {
               }
             })
           } else {
-            console.log('moving to login')
             this.$router.push({
               name: 'login'
             })

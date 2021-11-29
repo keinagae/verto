@@ -72,7 +72,7 @@ class EosRPC {
       return resp.rows
     } catch (error) {
       userError(error, 'Get table')
-      console.log(error, 'Get table')
+      // console.log(error, 'Get table')
       throw error
     }
   }
@@ -89,7 +89,7 @@ class EosRPC {
       return resp.rows
     } catch (error) {
       userError(error, 'Get table')
-      console.log(error, 'Get table')
+      // console.log(error, 'Get table')
       throw error
     }
   }

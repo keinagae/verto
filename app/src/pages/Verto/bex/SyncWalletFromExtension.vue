@@ -162,7 +162,6 @@ export default {
       try {
         this.spinnervisible = true
         const results = await configManager.restoreConfig(config, this.addWallet.vertoPassword)
-        console.log(results, 'results restoreConfig')
         if (results.message === 'bad_password') {
           this.spinnervisible = false
           this.pwdError = true

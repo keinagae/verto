@@ -123,7 +123,6 @@ async getEthWalletData (wallet) {
         let tokenSets = res.data.rebalancing_sets
         if (ethplorer.tokens) {
           ethplorer.tokens.filter(t => t.balance > 0 && t.tokenInfo.symbol).map(async (t, index) => {
-            const csa = Web3.utils.toChecksumAddress(t.tokenInfo.address)
             let token = tokenSets.find(s => s.address.toLowerCase() === t.tokenInfo.address.toLowerCase())
             t.tokenInfo.image = t.tokenInfo.image && t.tokenInfo.image.includes('https') ? t.tokenInfo.image : (token && token.image ? token.image : 'https://zapper.fi/images/' + t.tokenInfo.symbol.toUpperCase() + '-icon.png')
             if (t.tokenInfo.image) {
@@ -136,7 +135,7 @@ async getEthWalletData (wallet) {
                   }
                 })
               } catch (error) {
-                console.log('eth token not on 1inch', t.tokenInfo.image, csa, error)
+                // console.log('eth token not on 1inch', t.tokenInfo.image, csa, error)
               }
             }
             let amount = (t.balance / (10 ** t.tokenInfo.decimals)) * t.tokenInfo.price.rate

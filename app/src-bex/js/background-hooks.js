@@ -6,8 +6,6 @@ import WalletConnect from '@walletconnect/client'
 // import store from '@/store'
 // More info: https://quasar.dev/quasar-cli/developing-browser-extensions/background-hooks
 export default function attachBackgroundHooks (bridge /* , allActiveConnections */) {
-  console.log('idle setting')
-
   const connect = async (connector, accounts) => {
     connector.connected = false
     connector._connected = false
@@ -162,5 +160,4 @@ export default function attachBackgroundHooks (bridge /* , allActiveConnections 
       url: chrome.runtime.getURL('www/index.html')
     })
   })
-  console.log('hooks')
 }

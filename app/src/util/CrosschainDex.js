@@ -529,7 +529,7 @@ class Crosschaindex {
         // Print Ethereum transaction hash.
         .on('transactionHash', (txHash) => depositLog(`Mint tx: ${txHash}`))
         .on('tx_details', (tx_details) => {
-          console.log(tx_details, 'tx_details')
+          // console.log(tx_details, 'tx_details')
         })
     })
   }

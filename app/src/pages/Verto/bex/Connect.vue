@@ -111,7 +111,6 @@ export default {
     }
   },
   async mounted () {
-    console.log(123)
     this.setDefaultChoice()
     /*
     this.hasConfig = !!await configManager.hasVertoConfig()

@@ -93,7 +93,6 @@ if (process.env.MODE === 'bex' || window.screen.width < 500) {
     }
   ]
 } else {
-  console.log('else route path')
   shared_auth_urls = [
     {
       name: 'login',
