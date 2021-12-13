@@ -194,3 +194,4 @@ electron-builder.yml
 # Build folders for readthedocs
 _build/
 app/src-bex/www
+mozila_src/
