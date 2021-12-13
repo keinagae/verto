@@ -4,11 +4,11 @@ let noPriceList = {
   bsc: ['flux', 'velo']
 }
 export const setTokenList = (state, data) => {
-  // console.log(typeof data)
   state.list = typeof data === 'string' ? JSON.parse(data) : data
 }
 export const setWalletTokensData = (state, data) => {
   state.walletTokensData = state.walletTokensData.concat(data)
+  if (state.walletTokensData) return
   store.state.wallets.tokens.forEach((token, i) => {
     let tokenData = state.walletTokensData.find(o => o.symbol.toLowerCase() === token.type)
     if (tokenData) {

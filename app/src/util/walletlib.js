@@ -21,7 +21,7 @@ class Lib {
       name: 'Ethereum',
       chain: 'eth',
       nativeToken: 'eth',
-      icon: 'https://zapper.fi/images/ETH-icon.png',
+      icon: 'https://storage.googleapis.com/zapper-fi-assets/tokens/ethereum/0x0000000000000000000000000000000000000000.png',
       provider: 'https://mainnet.infura.io/v3/0dd5e7c7cbd14603a5c20124a76afe63',
       explorer: 'https://etherscan.io/tx/',
       gas: 'https://ethgas.watch/api/gas',
@@ -53,6 +53,16 @@ class Lib {
       explorer: 'https://cchain.explorer.avax.network/tx/',
       gas: '', // The C-Chain gas price is 225 nAVAX (225 GWei). The C-Chain gas limit is 8 * 10e6 (8,000,000).
       network_id: 43114
+    }, {
+      name: 'PulseChain',
+      chain: 'tpls',
+      nativeToken: 'tpls',
+      icon: 'https://pbs.twimg.com/profile_images/1412839310106234882/Z4H3-LxW_400x400.jpg',
+      provider: 'https://rpc.testnet.pulsechain.com',
+      explorer: 'https://scan.pulsechain.com/tx/',
+      gas: '', // The C-Chain gas price is 225 nAVAX (225 GWei). The C-Chain gas limit is 8 * 10e6 (8,000,000).
+      network_id: 940,
+      testnet: true
     }, {
       name: 'Fantom',
       chain: 'ftm',
@@ -273,6 +283,43 @@ class Lib {
   history = async (chain, key, token, data = null) => {
     const self = this
     const wallet = {
+      async tpls (token, key, data) {
+        return new Promise(async (resolve, reject) => {
+          let actions = []
+          axios.get(process.env[store.state.settings.network].CACHE + 'https://api.solscan.io/account/transaction?address=' + key)
+            .then(function (result) {
+              result.data.data.filter(o => o.parsedInstruction[0].type.toLowerCase() === 'sol-transfer').map(a => {
+                let tx = {}
+
+                let date = new Date(a.blockTime * 1000)
+                tx.timeStamp = date.getTime() / 1000
+                tx.chain = token
+                tx.friendlyHash = a.txHash.substring(0, 6) + '...' + a.txHash.substr(a.txHash.length - 5)
+                tx.to = tx.friendlyTo = a.parsedInstruction[0].programId
+                tx.hash = a.txHash
+                tx.explorerLink = 'https://solscan.io/tx/' + tx.hash
+                tx.from = a.signer[0]
+                tx.time = date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
+                tx.image = 'https://solana.com/branding/new/exchange/exchange-black.png' // self.getTokenImage(amount.split(' ')[1])
+                tx.amount = a.slot * 0.000000001
+                tx.symbol = 'SOL'
+                tx.direction = self.getTransactionDirection(a.signer[0], a.parsedInstruction[0].programId, key)
+                tx.dateFormatted = date.toISOString().split('T')[0]
+                tx.amountFriendly = parseFloat(Math.abs(tx.amount)).toFixed(6)
+
+                actions.push(tx)
+              })
+
+              resolve({
+                history: actions
+              })
+            }).catch(function (error) {
+              reject({
+                error: error
+              })
+            })
+        })
+      },
       async sol (token, key, data) {
         return new Promise(async (resolve, reject) => {
           let actions = []
@@ -599,6 +646,7 @@ class Lib {
   }
 
   balance = async (chain, key, token) => {
+    const self = this
     const wallet = {
       async sol (key, token) {
         let connection = new solanaWeb3.Connection(
@@ -606,7 +654,7 @@ class Lib {
           'confirmed'
         )
         let Pkey = new solanaWeb3.PublicKey(key)
-        // console.log(key, 'key', Pkey, 'Pkey')
+
         let amount = await connection.getBalance(Pkey)
         let tokenPrice = (await axios.get(process.env[store.state.settings.network].CACHE + 'https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd')).data.solana.usd
         amount = amount * 0.000000001
@@ -720,6 +768,12 @@ class Lib {
 
         // return { balance: float }
       },
+      async tpls (key, token) {
+        let web3 = self.getWeb3Instance(chain)
+        var balance = await web3.eth.getBalance(key)
+
+        return web3.utils.fromWei(balance.toString(), 'ether')
+      },
       async btc (key) {
         // key = '15urYnyeJe3gwbGJ74wcX89Tz7ZtsFDVew'
         const amount = (await axios.get(process.env[store.state.settings.network].CACHE + 'https://blockchain.info/q/addressbalance/' + key, {
@@ -814,6 +868,9 @@ class Lib {
     }
     return transactionReceipt.status
   }
+  isEvm (chain) {
+    return this.evms.find(o => o.chain === chain)
+  }
   getWeb3Instance (chain) {
     let evmData = this.getEvmData(chain)
     return evmData ? (new Web3(new Web3.providers.HttpProvider(this.getEvmData(chain).provider))) : null
@@ -854,6 +911,16 @@ class Lib {
 
     const wallet = {
       async ftm () {
+        gasData.gasPrice = await web3.eth.getGasPrice()
+
+        if ((type !== evmData.nativeToken || transaction.data) && !gasLimit) {
+          let gas = await web3.eth.estimateGas(transaction)
+          gasData.gas = gas
+        }
+        gasData = convertGasPrice(gasData)
+        return [gasData]
+      },
+      async tpls () {
         gasData.gasPrice = await web3.eth.getGasPrice()
 
         if ((type !== evmData.nativeToken || transaction.data) && !gasLimit) {
@@ -949,6 +1016,7 @@ class Lib {
 
         return gasOptions
       },
+
       async bsc () {
         /*
           The difference between Binance Chain and Ethereum is that there is no notion of gas.
@@ -973,7 +1041,28 @@ class Lib {
     let value = await wallet[chain]()
     return value
   }
+  getCoinGeckoId (asset) {
+    let tokens = store.state.tokens.list.map((o) => {
+      o.platforms2 = Object.keys(o.platforms).map(a => o.platforms[a] ? o.platforms[a].toLowerCase() : '')
+      return o
+    })
 
+    let token = tokens.find(
+      (t) =>
+        t.symbol.toLowerCase() === asset.type.toLowerCase() &&
+      (
+        t.platforms2.includes(asset.address.toLowerCase() ||
+        (!t.platforms2.includes('0x'))
+
+        )
+      ))
+    return token ? token.id : null
+  }
+  async getCoinGeckoPrice (asset) {
+    let id = this.getCoinGeckoId(asset)
+    console.log(id, 'id')
+    return id ? (await axios.get(process.env[store.state.settings.network].CACHE + 'https://api.coingecko.com/api/v3/simple/price?ids=' + id + '&vs_currencies=usd')).data[id].usd : null
+  }
   send = async (chain, token, from, to, value, memo, key, contract, data) => {
     const self = this
 
@@ -1306,6 +1395,9 @@ class Lib {
         }
       },
       async bsc (token, from, to, value, info, key, contract, evm = 'bsc') {
+        return chainsWallets.eth(token, from, to, value, info, key, contract, evm)
+      },
+      async tpls (token, from, to, value, info, key, contract, evm = 'tpls') {
         return chainsWallets.eth(token, from, to, value, info, key, contract, evm)
       },
       async avaxc (token, from, to, value, info, key, contract, evm = 'avaxc') {

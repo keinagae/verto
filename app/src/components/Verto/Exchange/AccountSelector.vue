@@ -3,7 +3,7 @@
     v-if="!chain || chains || showAllWallets"
     :class="{ 'dark-theme': $store.state.settings.lightMode === 'true' }"
   >
-    <div v-if="!($q.platform.is.mobile || $isbex)">
+    <div v-if="!($q.platform.is.mobile || $isbex) && false">
       <q-btn
         class="account_selector"
         dense
@@ -107,10 +107,8 @@
                         class="header-wallet full-width flex justify-between"
                       >
                         <q-item-section avatar>
-                          <q-icon
-                            name="fiber_manual_record"
-                            :color="item.color"
-                          />
+
+                       <span class="identicon" v-html="toAvatar(item.name)" />
                         </q-item-section>
                         <q-item-section class="item-name">
                           <span class="item-name--name" v-if="item.isEvm">
@@ -124,7 +122,7 @@
                             v-if="item.staked && item.staked !== 0 && false"
                             >Staked : {{ nFormatter2(item.staked, 3) }}</span
                           >
-                          <span class="item-name--staked" v-if="item.tokenList"
+                          <span class="item-name--staked" v-if="item.tokenList && (item.isEvm || item.chain == 'eos')"
                             >{{ item.tokenList.length }} token{{
                               item.tokenList.length > 1 ? "s" : ""
                             }}</span
@@ -208,8 +206,7 @@
         <span>No account found {{ chain }}</span>
       </div>
     </div>
-
-    <div v-if="$q.platform.is.mobile || $isbex" class="row justify-center">
+    <div  class="row justify-center">
       <q-btn
         class="account_selector"
         dense
@@ -223,27 +220,28 @@
         @click="dialog = true"
       />
       <q-item
-        v-if="!accountOption"
-        class="text-left full-width bg-white text-black"
+        v-if="!accountOption && allSelector"
+        class="text-left full-width account_selector_top"
+        :dark="$store.state.settings.lightMode === 'true'"
+        :class="{
+          'bg-grey-1 text-black': $store.state.settings.lightMode !== 'true',
+          'bg-blue-verto text-white': $store.state.settings.lightMode === 'true',
+          'text-white': $store.state.settings.lightMode === 'true',
+          'accountOptionDark' : $store.state.settings.lightMode === 'true'
+          }"
       >
-        <q-item-section @click="dialog = true" avatar>
-          <svg width="36" height="36" fill="#64b5f5">
-            <circle cx="18" cy="18" r="18" fill="#64b5f5"></circle>
-            <path
-              d="M11.664 18.866l-1.107.64a.856.856 0 000 1.488l5.678 3.283c1.09.63 2.44.63 3.53 0l5.678-3.283a.856.856 0 000-1.488l-1.107-.64-3.82 2.21a5.031 5.031 0 01-5.032 0l-3.82-2.21z"
-              fill="#fff"
-            ></path>
-            <path
-              d="M16.235 11.723a3.53 3.53 0 013.53 0l5.678 3.283a.856.856 0 010 1.488l-5.678 3.283a3.53 3.53 0 01-3.53 0l-5.678-3.283a.856.856 0 010-1.488l5.678-3.283z"
-              fill="#fff"
-            ></path>
+        <q-item-section :dark="$store.state.settings.lightMode === 'true'" @click="dialog = true" avatar>
+          <svg width="49" fill="transparent" height="49" class="view_all_svg">
+            <circle cx="18" cy="18" r="18"></circle>
+            <path d="M11.664 18.866l-1.107.64a.856.856 0 000 1.488l5.678 3.283c1.09.63 2.44.63 3.53 0l5.678-3.283a.856.856 0 000-1.488l-1.107-.64-3.82 2.21a5.031 5.031 0 01-5.032 0l-3.82-2.21z"></path>
+            <path d="M16.235 11.723a3.53 3.53 0 013.53 0l5.678 3.283a.856.856 0 010 1.488l-5.678 3.283a3.53 3.53 0 01-3.53 0l-5.678-3.283a.856.856 0 010-1.488l5.678-3.283z"></path>
           </svg>
         </q-item-section>
 
-        <q-item-section>
+        <q-item-section :dark="$store.state.settings.lightMode === 'true'">
           <q-item-label @click="dialog = true">Portfolio view</q-item-label>
           <q-item-label caption lines="1" @click="dialog = true"
-            >Click here to view specific account
+            >Click here to view a specific account
           </q-item-label>
         </q-item-section>
 
@@ -255,7 +253,10 @@
           />
         </q-item-section>
       </q-item>
-      <q-item v-else class="text-left full-width bg-white text-black">
+      <q-item v-else :dark="$store.state.settings.lightMode === 'true'" class="text-left full-width account_selector_top" :class="{
+        'bg-grey-1 text-black': $store.state.settings.lightMode !== 'true',
+        'bg-blue-verto text-white': $store.state.settings.lightMode === 'true'
+      }">
         <q-item-section @click="dialog = true" avatar>
           <q-img size="lg" :src="`${accountOption.icon}`" />
         </q-item-section>
@@ -276,7 +277,7 @@
                 )
               }}</span
             >
-            <span class="item-info--amountUSD" v-else
+            <span class="item-info--amountUSD" :class="$store.state.settings.lightMode === 'true' ? 'text-white':''" v-else
               >${{
                 nFormatter2(
                   new Number(
@@ -302,14 +303,14 @@
 
         <q-item-section side>
           <q-icon
-            name="keyboard_arrow_down"
+            :name="!dialog ? 'keyboard_arrow_down' : 'keyboard_arrow_up'"
             @click="dialog = true"
             class="shadows-2"
           />
         </q-item-section>
       </q-item>
 
-      <q-dialog v-model="dialog" :maximized="true">
+      <q-dialog v-model="dialog" :maximized="$q.platform.is.mobile">
         <q-card
           class=""
           :style="
@@ -321,65 +322,63 @@
           <q-toolbar>
             <q-btn
               flat
-              round
               dense
-              :color="
-                $store.state.settings.lightMode === 'true' ? 'white' : 'black'
-              "
+              :color="$store.state.settings.lightMode === 'true' ? 'white' : 'black'"
               icon="arrow_back_ios"
               class="q-mr-sm"
+              no-caps
+              v-close-popup
+              label="Back"
               @click="dialog = false"
             />
-            <!-- <q-toolbar-title style="margin-left: -25px"> Select An Account  </q-toolbar-title> -->
+
           </q-toolbar>
 
           <div
             :class="
               $store.state.settings.lightMode === 'true'
                 ? 'text-h6 q-pa-md text-white'
-                : 'text-h6 q-pa-md '
-            "
+                : 'text-h6 q-pa-md q-ml-md'
+              "
           >
             Select An Account
           </div>
+
           <q-card-section class="items-center" >
             <q-item
 
               :key="Math.random() + '123'"
-              v-if="accountOption"
+              v-if="accountOption && allSelector"
               class="
                 z-top
                 text-left
                 full-width
-                bg-white
-                text-black
                 cursor-pointer
               "
+              :class="{
+                'bg-white text-black':$store.state.settings.lightMode !== 'true',
+                'bg-blue-verto text-white':$store.state.settings.lightMode === 'true'
+              }"
             >
-              <q-item-section avatar @click="unsetDefaultAccount()">
-                <svg width="36" height="36" fill="#64b5f5">
-                  <circle cx="18" cy="18" r="18" fill="#64b5f5"></circle>
-                  <path
-                    d="M11.664 18.866l-1.107.64a.856.856 0 000 1.488l5.678 3.283c1.09.63 2.44.63 3.53 0l5.678-3.283a.856.856 0 000-1.488l-1.107-.64-3.82 2.21a5.031 5.031 0 01-5.032 0l-3.82-2.21z"
-                    fill="#fff"
-                  ></path>
-                  <path
-                    d="M16.235 11.723a3.53 3.53 0 013.53 0l5.678 3.283a.856.856 0 010 1.488l-5.678 3.283a3.53 3.53 0 01-3.53 0l-5.678-3.283a.856.856 0 010-1.488l5.678-3.283z"
-                    fill="#fff"
-                  ></path>
+              <q-item-section avatar >
+                <svg width="49" fill="transparent" height="49" class="view_all_svg">
+                  <circle cx="18" cy="18" r="18"></circle>
+                  <path d="M11.664 18.866l-1.107.64a.856.856 0 000 1.488l5.678 3.283c1.09.63 2.44.63 3.53 0l5.678-3.283a.856.856 0 000-1.488l-1.107-.64-3.82 2.21a5.031 5.031 0 01-5.032 0l-3.82-2.21z"></path>
+                  <path d="M16.235 11.723a3.53 3.53 0 013.53 0l5.678 3.283a.856.856 0 010 1.488l-5.678 3.283a3.53 3.53 0 01-3.53 0l-5.678-3.283a.856.856 0 010-1.488l5.678-3.283z"></path>
                 </svg>
               </q-item-section>
 
-              <q-item-section @click="unsetDefaultAccount()">
-                <q-item-label @click="dialog = true"
-                  >View entire portfolio</q-item-label
+              <q-item-section >
+                <q-item-label
+                @click=" dialog = false; unsetDefaultAccount()"
+                  >View entire portfolio </q-item-label
                 >
-                <q-item-label caption lines="1" @click="dialog = true"
+                <q-item-label  @click=" dialog = false; unsetDefaultAccount()" :class="$store.state.settings.lightMode === 'true' ? 'text-white':''" :dark="$store.state.settings.lightMode === 'true'" caption lines="1"
                   >View all chains and assets
                 </q-item-label>
               </q-item-section>
 
-              <q-item-section side @click="unsetDefaultAccount()">
+              <q-item-section side @click=" dialog = false; " >
                 <q-icon name="expand_more" class="shadows-2" />
               </q-item-section>
             </q-item>
@@ -402,7 +401,7 @@
                     :dark="$store.state.settings.lightMode === 'true'"
                     avatar
                   >
-                    <img class="coin-icon" width="25px" :src="tokChain.icon" />
+                    <img class="coin-icon" width="35px" :src="tokChain.icon" />
                   </q-item-section>
                   <q-item-section
                     :dark="$store.state.settings.lightMode === 'true'"
@@ -453,9 +452,10 @@
                         setAccount(300);
                         dialog = false;
                       "
+
                       :key="Math.random() + index"
                       v-for="(item, index) in tokChain.accounts"
-                      :class="{ selected: item.selected }"
+                      :class="{ selected: item.selected , 'bg-indigo-1': accountOption && accountOption.index == item.index}"
                       clickable
                       :active="item.hidden"
                       active-class="bg-teal-1 text-grey-8"
@@ -465,11 +465,8 @@
                           class="header-wallet full-width flex justify-between"
                         >
                           <q-item-section avatar>
-                            <q-icon
-                              size="lg"
-                              name="fiber_manual_record"
-                              :color="item.color"
-                            />
+
+                            <span class="identicon" v-html="toAvatar(item.name)" />
                           </q-item-section>
                           <q-item-section class="item-name">
                             <span
@@ -488,7 +485,7 @@
                             >
                             <span
                               class="item-name--staked"
-                              v-if="item.tokenList"
+                             v-if="item.tokenList && (item.isEvm || item.chain == 'eos')"
                               >{{ item.tokenList.length }} token{{
                                 item.tokenList.length > 1 ? "s" : ""
                               }}</span
@@ -577,8 +574,10 @@
 <script>
 import Formatter from '@/mixins/Formatter'
 import DexInteraction from '@/mixins/DexInteraction'
+
 export default {
   props: [
+    'allSelector',
     'showPortfolio',
     'chain',
     'showAllWallets',
@@ -810,9 +809,11 @@ export default {
       }, time)
     },
     unsetDefaultAccount () {
-      this.$store.state.investment.defaultAccount = null
+      this.$store.commit(
+        'investment/setDefaultAccount',
+        false
+      )
       this.accountOption = null
-      this.dialog = false
     },
     formatLabel (label) {
       try {
@@ -851,9 +852,8 @@ export default {
       }
     }, */
     '$store.state.investment.defaultAccount': function (val) {
-      console.log(val, 'val')
       if (!val || !['defi', 'set'].includes(val.origin)) return
-      console.log(val, 'val 2')
+
       let w = this.$store.state.investment.defaultAccount
 
       this.accountOption = {
@@ -1002,6 +1002,23 @@ export default {
 .singleChain .accounts.q-dark {
   background: #04111f;
 }
+.account_selector_container{
+    // border-bottom: 1px solid #CCC;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: #eef8ff;
+    padding-bottom: 0px;
+    box-shadow: 0px 6px 6px 0px rgba(black, .1);
+    .account_name{
+      text-transform: capitalize;
+      font-size: 18px;
+    }
+    .account_name_caption{
+      font-size: 14px;
+    }
+  }
 </style>
 <style>
 .q-menu--dark.q-dark
@@ -1028,4 +1045,33 @@ body.desktop .q-hoverable:hover > .q-focus-helper:after {
   background: #061a30;
   opacity: 0.3;
 }
+.accountOptionDark{
+  background: #04111f;
+}
+.bg-blue-verto{
+  background: #0e1829;
+}
+.view_all_svg{
+  padding: 5px;
+}
+.view_all_svg circle{
+  stroke: #64b5f5;
+  stroke-width: 1px;
+  stroke-dashoffset: 3;
+  transform: translate(1px, 1px);
+}
+.view_all_svg path{
+  transform: translate(1px, 1px);
+  fill: #64b5f5;
+}
+
+.identicon{
+    overflow: hidden;
+    background: #FFF;
+    width: 30px;
+    border-radius: 10px;
+    height: 30px;
+    outline: 1px solid #64b5f6;
+  }
+
 </style>

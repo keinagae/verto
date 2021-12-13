@@ -1953,7 +1953,7 @@ export default {
       destinationCoin: {
         label: 'ETH',
         value: 'eth',
-        image: 'https://zapper.fi/images/ETH-icon.png'
+        image: 'https://storage.googleapis.com/zapper-fi-assets/tokens/ethereum/0x0000000000000000000000000000000000000000.png'
       },
       destinationCoinOptions: [],
       transactions: [],
@@ -2749,7 +2749,7 @@ export default {
                 (w) => w.chain === a.fromChain && w.type === a.fromToken
               )
               a.walletToken = walletToken
-              a.tokenPrice = walletToken
+              a.fromTokenPrice = walletToken
                 ? walletToken.tokenPrice
                 : o.tokenPrice
               a.fromAmount = o.amount
@@ -4505,6 +4505,13 @@ export default {
     border: 1px solid #0e1829;
     padding: 20px 30px;
     border-radius: 40px;
+  }
+  @media screen and (max-width: 768px){
+    .q-dialog .q-card.q-card--dark.q-dark{
+      border: 1px solid #0e1829;
+      padding: 0px;
+      border-radius: 6px;
+    }
   }
   .dex_name{
     text-transform: uppercase;

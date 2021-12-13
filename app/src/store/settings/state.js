@@ -2,6 +2,7 @@ export default {
   newSettingsPage: false,
   rightOrder: false,
   network: 'mainnet',
+  accountTab: null,
   devMode: false,
   defaultChainData: null,
   globalSettings: {},
@@ -32,5 +33,5 @@ export default {
   eos: {
     swapSlippage: 3
   },
-  lightMode: false
+  lightMode: true
 }

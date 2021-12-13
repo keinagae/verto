@@ -1,9 +1,13 @@
 import HD from '@/util/hdwallet'
 import Lib from '@/util/walletlib'
-import { scroll } from 'quasar'
+import { scroll, openURL } from 'quasar'
+import { toSvg } from 'jdenticon'
 
 export default {
   methods: {
+    toAvatar (name) {
+      return toSvg(name, 30)
+    },
     isValidUrl (string) {
       let url
 
@@ -15,14 +19,15 @@ export default {
 
       return url.protocol === 'http:' || url.protocol === 'https:'
     },
-    getImportLink (chain) {
-      let to = '/verto/import-wallet/' + chain
+    getImportLink (chain, watch = false) {
+      let to = '/verto/import-wallet/' + chain + (watch ? '/watch' : '')
+
       let routes = {
-        eth: '/verto/import-private-key/eth',
-        eos: '/verto/eos-account/import',
-        btc: '/verto/import-wallet/btc'
+        eth: '/verto/import-private-key/eth' + (watch ? '/watch' : ''),
+        eos: '/verto/eos-account/import' + (watch ? '/watch' : ''),
+        btc: '/verto/import-wallet/btc' + (watch ? '/watch' : '')
       }
-      if (routes[chain]) {
+      if (!watch && routes[chain]) {
         to = routes[chain]
       }
       return to
@@ -105,8 +110,8 @@ export default {
       }
       return label
     },
-    getKeyFormat (key, last = 5) {
-      return key ? key.substring(0, 5).toLowerCase() +
+    getKeyFormat (key, last = 4) {
+      return key ? key.substring(0, 4).toLowerCase() +
       '...' +
       key.substr(key.length - last).toLowerCase() : ''
     },
@@ -223,6 +228,9 @@ export default {
       }
       return form_data
     },
+    goToLink (url) {
+      openURL(url)
+    },
     nFormatter2 (num, digits) {
       if (isNaN(num)) {
         return 0
@@ -280,6 +288,7 @@ export default {
            ....,
         ]
       */
+
       let chains = JSON.parse(JSON.stringify(this.$store.state.wallets.tokens.filter((v, i, a) => (v.type === v.chain || v.type === 'verto' || !['eos', 'eth'].includes(v.chain)) && a.findIndex(t => (t.chain === v.chain)) === i)))
         .map(o => {
           let accounts = this.$store.state.wallets.tokens.filter(f => f.chain === o.chain)

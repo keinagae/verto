@@ -1,18 +1,11 @@
 <template>
-  <div class="bg-white">
-    <AccountSelector
-      :showPortfolio="true"
-      class="top q-pt-md"
-      :showAllWallets="true"
-    />
-    <AppBar
-      class="appbar_wrapper bg-grey-1"
-      :callChainTools="callChainTools"
-      v-if="showPanelStatus"
-    />
-
-    <div class="q-pa-md showpanelstatus_wrapper" v-if="showPanelStatus">
-      <div class="q-pb-md row flex justify-between">
+  <div :class="$store.state.settings.lightMode === 'true' ? 'bg-blue-verto':'bg-white'">
+    <AppBar class="appbar_wrapper" :callChainTools="callChainTools" v-if="showPanelStatus"/>
+    <AccountSelector :showPortfolio="true" :allSelector="true" class="top" :class="$store.state.settings.lightMode === 'true' ? 'bg-tranparent':'bg-grey-1'" :showAllWallets="true" />
+    <div class="q-pa-md showpanelstatus_wrapper" :class="{'showpanelDark': $store.state.settings.lightMode === 'true'}" v-if="showPanelStatus">
+      <div class="q-pb-md row flex justify-between relative" :class="$store.state.investment.defaultAccount ? '':'q-pt-md'">
+        <span v-if="$store.state.investment.defaultAccount" class="label_balance"/>
+        <span v-else class="label_balance" :class="$store.state.settings.lightMode === 'true' ? 'text-white':''">Balance of all chains</span>
         <div
           class="text-h4 text-bold"
           v-if="$store.state.wallets.customTotal.show"
@@ -93,6 +86,7 @@
           <div class="col-6 q-pl-sm">
             <q-btn
               unelevated
+              outline
               color="blue-4"
               no-caps
               class="action_btns full-width text-bold"
@@ -174,5 +168,24 @@ export default {
 }
 .showpanelstatus_wrapper {
   border-bottom: 1px solid rgb(231, 231, 231);
+  &.showpanelDark{
+    border-bottom: 1px solid black;
+    .label_balance{
+      color: #FFF !important;
+    }
+  }
+}
+.relative{
+  position: relative;
+}
+.label_balance{
+  position: absolute;
+  left: 0px;
+  top: -6px;
+  font-size: 15px;
+  font-weight: 500;
+}
+.bg-blue-verto{
+  background: #04111f;
 }
 </style>

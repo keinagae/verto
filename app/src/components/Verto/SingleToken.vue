@@ -12,7 +12,26 @@
 
             <span class="z-max">
              <div class="text-h6 text-bold">
-              {{marketData && marketData.tokenName ? marketData && marketData.tokenName:  asset.type.toUpperCase()}}</div>
+              {{marketData && marketData.tokenName ? marketData && marketData.tokenName:  asset.type.toUpperCase()}}
+
+                <q-btn-dropdown class="float-right q-pr-lg" dense flat color="primary" icon="more_horiz" label="Options">
+      <q-list>
+        <q-item clickable v-close-popup >
+          <q-item-section>
+            <q-item-label @click="markAsNotValuable()" v-if="isValuable">Mark as not valuable</q-item-label>
+             <q-item-label @click="markAsValuable()" v-else>Mark as valuable</q-item-label>
+          </q-item-section>
+        </q-item>
+
+        <q-item v-if="asset.coinGeckoId" @click.native="goToLink('https://www.coingecko.com/en/search_redirect?id='+asset.coinGeckoId+'&type=coin')" clickable v-close-popup >
+          <q-item-section>
+            <q-item-label>Check in Coingecko</q-item-label>
+          </q-item-section>
+        </q-item>
+
+      </q-list>
+    </q-btn-dropdown>
+              </div>
               <div class="row q-pb-xl flex items-center">
 
                 <h2>
@@ -326,8 +345,8 @@
                <q-tab v-if="!$store.state.wallets.portfolioTotal" name="import" label="Import" />
                 <q-tab v-if="$store.state.wallets.portfolioTotal" name="send" label="Send" />
            <!--     <q-tab name="swap" v-if="asset.chain != 'eos'  && show1inch" label="Swap" />-->
-                <q-tab name="buy" v-if="$store.state.wallets.portfolioTotal" @click="exchangeToken({to:asset.type})"  label="Buy" />
-                <q-tab v-if="$store.state.investment.defaultAccount && $store.state.investment.defaultAccount.key && $store.state.wallets.portfolioTotal" name="sell" @click="exchangeToken({from:asset.type})" label="Sell" />
+                <q-tab name="buy" v-if="$store.state.wallets.portfolioTotal" @click="exchangeToken({asset:asset, action: 'buy'})"  label="Buy" />
+                <q-tab v-if="$store.state.investment.defaultAccount && $store.state.investment.defaultAccount.key && $store.state.wallets.portfolioTotal" name="sell" @click="exchangeToken({asset:asset, action: 'sell'})" label="Sell" />
               </q-tabs>
 
               <ImportView class="q-pa-md" v-if="!$store.state.wallets.portfolioTotal" :chain="asset.chain" :key="asset.chain" />
@@ -582,7 +601,7 @@
           <liquidityPoolsTable  v-else-if="tokenTabOption == 'opportunities'"  :asset="asset" :rowsPerPage="7"   /> -->
           </div>
 
-          <TokenByAccount :type="asset.type" :chain="asset.chain" class="right-area q-mt-lg col" />
+          <TokenByAccount :type="asset.type" :chain="asset.chain" class="tokenbyaccount2 right-area q-mt-lg col" />
         </div>
 
       </div>
@@ -609,7 +628,7 @@ import AccountSelector from './Exchange/AccountSelector.vue'
 import { JsonRpc } from 'eosjs'
 import { QScrollArea } from 'quasar'
 import SignleTokenDialog from './MobileUI/SingleTokenDialog.vue'
-
+import initWallet from '@/util/Wallets2Tokens'
 // import Godex from './Exchange/Godex.vue'
 
 export default {
@@ -681,9 +700,49 @@ export default {
   },
   async created () {
     this.setAssetData()
-    console.log('param-asset >', this.$route.params.asset)
+    this.isTokenValuable()
   },
   methods: {
+    isTokenValuable () {
+      let not_valuable = localStorage.getItem('not_valuable')
+      let found = -1
+      if (not_valuable) {
+        not_valuable = JSON.parse(not_valuable)
+        console.log(not_valuable, 'not_valuable')
+        found = not_valuable.findIndex(o => o.chain === this.asset.chain && o.type === this.asset.type)
+      }
+      if (found >= 0) {
+        this.isValuable = false
+      } else {
+        this.isValuable = true
+      }
+      return found
+    },
+    markAsValuable () {
+      let not_valuable = localStorage.getItem('not_valuable')
+      if (not_valuable) {
+        not_valuable = JSON.parse(not_valuable)
+        let found = this.isTokenValuable()
+        if (found === -1) return
+        not_valuable.splice(found, 1)
+        localStorage.setItem('not_valuable', JSON.stringify(not_valuable))
+        this.isValuable = true
+      }
+      initWallet()
+    },
+    markAsNotValuable () {
+      let not_valuable = localStorage.getItem('not_valuable')
+      if (not_valuable) {
+        not_valuable = JSON.parse(not_valuable)
+        not_valuable.push(this.asset)
+        localStorage.setItem('not_valuable', JSON.stringify(not_valuable))
+      } else {
+        localStorage.setItem('not_valuable', JSON.stringify([this.asset]))
+      }
+      this.isValuable = false
+      this.asset.usd = 0
+      initWallet()
+    },
     setAsset (asset) {
       try {
         let data = (this.$route.params.assets || []).find(o => o.type === asset.type && o.chain === asset.chainID)
@@ -698,7 +757,6 @@ export default {
       }
     },
     async setAssetData (data) {
-      console.log(data, 'data')
       let asset = data || this.assetData
       if (asset && asset.chainID) {
         asset.chain = asset.chainID
@@ -989,6 +1047,7 @@ export default {
     return {
       tab: 'send',
       marketData: null,
+      isValuable: true,
       asset: {},
       fromPreview: false,
       assetBalance: null,
@@ -1016,7 +1075,7 @@ export default {
       destinationCoin: {
         label: 'ETH',
         value: 'eth',
-        image: 'https://zapper.fi/images/ETH-icon.png'
+        image: 'https://storage.googleapis.com/zapper-fi-assets/tokens/ethereum/0x0000000000000000000000000000000000000000.png'
       }
     }
   },

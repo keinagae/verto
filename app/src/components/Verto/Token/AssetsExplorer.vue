@@ -4,7 +4,8 @@
       'q-pt-lg': !allAssets,
       'dark-theme': $store.state.settings.lightMode === 'true',
       'receive_wrapper_class': tab == 'receive',
-      'import_wrapper_class': tab == 'import'
+      'import_wrapper_class': tab == 'import',
+      'min-size': !$q.platform.is.mobile
     }"
     class="wrapper q-px-lg full-width assets_explorer_container"
     :style=" ($q.platform.is.mobile||$isbex) && $store.state.settings.lightMode !== 'true' ? 'background: #f2f2f2 !important' : '' "
@@ -837,7 +838,8 @@
                 <div>
                   <h6>
                     {{ asset.type.toUpperCase()
-                    }} {{ asset.isStaked ? 'Staked' : ''}}<svg
+                    }} {{ asset.isStaked ? 'Staked' : ''}}
+                    <svg
                       v-if="false"
                       class="q-ml-md"
                       viewBox="0 0 32 32"
@@ -932,7 +934,11 @@
               <h2 class="q-my-none ellipsis">
                 ${{ formatNumber(asset.usd, 2) }}
                 <!-- <span v-if="parseInt(asset.usd).toString().length <= 5" class="g-txt">.{{formatNumber(asset.usd,2).split('.')[1]}}</span> -->
-                <span
+                  <span
+                  v-if="asset.notValuable"
+                    class="no-value"
+                  >No Value</span>
+                  <span
                   v-if="asset.change24hPercentage"
                   :class="'sr-txt absolute-top-right ' + asset.color"
                   >{{ asset.color === "text-green-6" ? "↑" : "↓" }}
@@ -1080,6 +1086,7 @@
   </div>
 
   <ShowKeys
+
     :key="keys.keying"
     v-if="keys.chain"
     :chain="keys.chain"
@@ -1318,9 +1325,15 @@ export default {
     this.getVTXHistoriclPrice()
   },
   watch: {
+    '$store.state.settings.accountTab': function (val, old) {
+      if (val === 'privateKeys' && old !== 'privateKeys') {
+        this.alertSecurity = true
+      } else if (val) { this.tab = val }
+    },
     '$store.state.wallets.tokens': {
       deep: true,
       handler () {
+        this.initTable()
         if (!this.$store.state.wallets.portfolioTotal) {
           this.tab = 'receive'
         } else if (
@@ -1632,7 +1645,7 @@ export default {
 
         t.tokens.forEach((a) => {
           let protocolData = this.platformOptions.find(
-            (o) => o.label.toLowerCase() === t.protocolDisplay.toLowerCase()
+            (o) => t.protocolDisplay && o.label.toLowerCase() === t.protocolDisplay.toLowerCase()
           )
           let index = assets.findIndex(
             (t) => t.type === a.symbol.toLowerCase()
@@ -1753,13 +1766,16 @@ export default {
       this.getChains()
       // console.log(this.chains, 'this.chains = ')
       if (
-        this.$store.state.investment.defaultAccount
+        this.$store.state.investment.defaultAccount &&
+        this.$q.platform.is.mobile
       ) {
         account = this.$store.state.investment.defaultAccount
         // this.getChainLabel(account.chain)
       }
       chain = chain || this.selectedChain ? this.selectedChain.chain : chain
       this.assets = []
+      let not_valuable = localStorage.getItem('not_valuable')
+      not_valuable = not_valuable ? JSON.parse(not_valuable) : []
       this.$store.state.wallets.tokens
         .filter(
           (o) =>
@@ -1767,13 +1783,19 @@ export default {
             (chain && o.chain === chain && !account) ||
             (account &&
               o.chain === account.chain &&
-              ((account.isEvm && o.key === account.key) ||
-                (!account.isEvm && o.name === account.name)))
+              ((account.isEvm && o.key.toLowerCase() === account.key.toLowerCase()) ||
+                (!account.isEvm && o.name.toLowerCase() === account.name.toLowerCase())))
         )
         .forEach((asset, i) => {
           let token = Object.assign({}, asset)
           token.amount = parseFloat(token.amount)
           token.usd = parseFloat(token.usd)
+
+          if (not_valuable.length && not_valuable.find(z => z.chain === token.chain && z.type === token.type)) {
+            token.tokenPrice = 0
+            token.usd = 0
+            token.notValuable = true
+          }
           if (
             (!isNaN(token.amount) && token.amount !== 0) ||
             token.isEvm ||
@@ -1786,6 +1808,7 @@ export default {
                 (token.chain !== 'eos' || o.contract === token.contract)
             )
             if (index !== -1) {
+              this.assets[index].notValuable = token.notValuable
               this.assets[index].amount += token.amount
               this.assets[index].usd += isNaN(token.usd) ? 0 : token.usd
               this.assets[index].rateUsd = isNaN(token.tokenPrice)
@@ -2168,7 +2191,7 @@ export default {
   transition: all 0.2s ease-in-out;
   margin-left: 0px;
   margin-right: 0px;
-  min-height: 208px;
+
 }
 .row > .col-md-3{
   padding-bottom: 10px;
@@ -2517,4 +2540,11 @@ ul.tabs li a.active {
   height: 60vh !important;
   margin-left: 0px !important;
 }
+.desktop /deep/ .q-dialog {
+  max-width:400px !important
+}
+.no-value {
+    font-size: 14px;
+    color: red !important
+ }
 </style>

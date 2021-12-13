@@ -17,7 +17,7 @@ class Wallets2Tokens {
     let ethWallet = null
     this.tableDataCache = []
     this.tableData = []
-    // console.log('walletName', data)
+
     // store.state.wallets.portfolioTotal = 0
     /*
     store.state.currentwallet.config.keys.push({
@@ -57,11 +57,12 @@ class Wallets2Tokens {
     const self = this
     self.eosUSD = 0
     this.getEosUSD()
-
-    this.tableData = [...store.state.currentwallet.config.keys].filter(
+    let watchAccounts = localStorage.getItem('watchAccounts')
+    watchAccounts = watchAccounts ? JSON.parse(watchAccounts) : []
+    this.tableData = [...store.state.currentwallet.config.keys].concat(watchAccounts).filter(
       w => (!walletName || (w.name.toLowerCase() === walletName.toLowerCase() && !ethWallet)) || (ethWallet && w.key.toLowerCase() === ethWallet.key.toLowerCase())
     )
-    // console.log(this.tableData, walletName, 'walletName 4')
+
     if (store.state.settings.network === 'testnet') {
       this.tableData = this.tableData.filter(o => o.origin === 'eos_testnet')
       this.tableData.map(async wallet => {
@@ -309,9 +310,10 @@ class Wallets2Tokens {
           }
           this.getEOSTokens(wallet, balances)
         } else if (wallet.type === 'eth') {
+          this.getPulseBalance(wallet)
           // wallet.key = '0x181717bab64928669f606ee8b266502aaa2f6608'
           Lib.evms.filter(m =>
-            m.network_id !== 1 // Until eth is integrated into covalent api
+            ![1, 940].includes(m.network_id) // Until eth is integrated into covalent api
           ).forEach(e => {
             axios
               .get(
@@ -356,10 +358,7 @@ class Wallets2Tokens {
                 })
                 this.updateWallet()
               }).catch(e => {
-                this.$q.notify({
-                  color: 'negative',
-                  message: e
-                })
+                console.log(e, 'covalenthq')
               })
           })
 
@@ -385,7 +384,7 @@ class Wallets2Tokens {
                   eth.key = wallet.key.toLowerCase()
                   eth.usd = ethplorer.ETH.balance * ethplorer.ETH.price.rate
                   eth.tokenPrice = ethplorer.ETH.price.rate
-                  eth.icon = 'https://zapper.fi/images/ETH-icon.png'
+                  eth.icon = 'https://storage.googleapis.com/zapper-fi-assets/tokens/ethereum/0x0000000000000000000000000000000000000000.png'
                 })
               // let ethBalance = ethplorer.ETH.balance * ethplorer.ETH.price.rate
               // store.state.wallets.portfolioTotal += isNaN(ethBalance) ? 0 : ethBalance
@@ -400,46 +399,20 @@ class Wallets2Tokens {
                     }
                   )
                   .then(res => {
-                    let tokenSets = res.data.rebalancing_sets
+                    // let tokenSets = res.data.rebalancing_sets
 
                     if (ethplorer.tokens) {
                       ethplorer.tokens
                         .filter(t => t.balance > 0 && t.tokenInfo.symbol)
                         .map(async (t, index) => {
-                          let token = tokenSets.find(
-                            s =>
-                              s.address.toLowerCase() ===
-                              t.tokenInfo.address.toLowerCase()
-                          )
                           t.tokenInfo.image =
                             t.tokenInfo.image &&
                             t.tokenInfo.image.includes('https')
                               ? t.tokenInfo.image
-                              : token && token.image
-                                ? token.image
-                                : 'https://zapper.fi/images/' +
-                                t.tokenInfo.symbol.toUpperCase() +
-                                '-icon.png'
+                              : t.tokenInfo.image
+                                ? 'https://ethplorer.io' + t.tokenInfo.image
+                                : 'https://etherscan.io/images/main/empty-token.png'
 
-                          if (t.tokenInfo.image) {
-                            try {
-                              await axios
-                                .get(t.tokenInfo.image, {
-                                  validateStatus: false
-                                })
-                                .then(result => {
-                                  if (result.status !== 200) {
-                                    t.tokenInfo.image =
-                                      'https://etherscan.io/images/main/empty-token.png'
-                                  }
-                                })
-                            } catch (error) {
-                              if (error) {
-                                t.tokenInfo.image =
-                                  'https://etherscan.io/images/main/empty-token.png'
-                              }
-                            }
-                          }
                           let usd = t.tokenInfo.symbol ? Lib.findInExchangeList('eth', t.tokenInfo.symbol.toLowerCase(), t.tokenInfo.address) : false
                           let amount =
                             (t.balance / 10 ** t.tokenInfo.decimals) *
@@ -456,7 +429,7 @@ class Wallets2Tokens {
                             decimals: parseInt(t.tokenInfo.decimals),
                             privateKey: wallet.privateKey,
                             amount: t.balance / 10 ** t.tokenInfo.decimals,
-                            usd: usd ? amount : 0,
+                            usd: amount || 0,
                             contract: t.tokenInfo.address,
                             chain: 'eth',
                             to:
@@ -466,6 +439,7 @@ class Wallets2Tokens {
                               wallet.key,
                             icon: t.tokenInfo.image
                           })
+
                           // store.state.wallets.portfolioTotal += isNaN(amount) ? 0 : amount
                           this.updateWallet()
                         })
@@ -506,11 +480,64 @@ class Wallets2Tokens {
     // store.commit('wallets/updateTokens', this.tableData)
     // store.commit('wallets/updatePortfolioTotal',// store.state.wallets.portfolioTotal)
   }
+  async getPulseBalance (wallet) {
+    let balance = await Lib.balance('tpls', wallet.key)
+
+    this.tableData.push({
+      isEvm: true,
+      disabled: false,
+      type: 'tpls',
+      name: wallet.name,
+      tokenPrice: 0,
+      key: wallet.key.toLowerCase(),
+      privateKey: wallet.privateKey,
+      amount: balance,
+      usd: 0,
+      decimals: 18,
+      contract: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+      chain: 'tpls',
+      icon: 'https://pbs.twimg.com/profile_images/1412839310106234882/Z4H3-LxW_400x400.jpg'
+    })
+
+    axios
+      .get(
+        process.env[store.state.settings.network].CACHE + 'https://scan.pulsechain.com/address/' + wallet.key + '/token-balances')
+      .then(res => {
+        var html = new DOMParser().parseFromString(res.data, 'text/html')
+        let rawTokenData = html.querySelectorAll('.border-bottom')
+
+        for (let i = 0; i < rawTokenData.length; ++i) {
+          let tokens = rawTokenData[i].querySelectorAll('p')
+          let address = rawTokenData[i].querySelector('a').getAttribute('href').split('/')[2]
+          let symbol = rawTokenData[i].getAttribute('data-token-symbol')
+          let amount = parseFloat(tokens[1].innerText)
+
+          this.tableData.push({
+            isEvm: true,
+            disabled: false,
+            type: symbol.toLowerCase(),
+            name: wallet.name,
+            tokenPrice: 0,
+            key: wallet.key.toLowerCase(),
+            privateKey: wallet.privateKey,
+            amount: amount,
+            usd: 0,
+            decimals: 18,
+            contract: address,
+            chain: 'tpls',
+            icon: this.getTokenImage('eth', symbol.toLowerCase())
+          })
+        }
+        this.updateWallet()
+      }).catch(e => {
+        console.log(e, 'e')
+      })
+  }
   getTokenImage (chain, type) {
     let image = 'https://etherscan.io/images/main/empty-token.png'
 
     if (Lib.evms.find(o => o.chain === chain) && store.state.tokens.evmTokens[chain]) {
-      let token = store.state.tokens.evmTokens[chain].find(o => o.symbol.toLowerCase() === type.toLowerCase())
+      let token = store.state.tokens.evmTokens[chain].find(o => o.symbol && type && o.symbol.toLowerCase() === type.toLowerCase())
       if (token) image = token.logoURI
       // Set bnb token image temp
     //  if (type === 'bnb') image = 'https://nownodes.io/images/binance-smart-chain/bsc-logo.png'
@@ -768,7 +795,7 @@ class Wallets2Tokens {
             eth.amount = ethBalance.ammount
             eth.usd = ethBalance.usd
             eth.isEvm = true
-            eth.icon = 'https://zapper.fi/images/ETH-icon.png'
+            eth.icon = 'https://storage.googleapis.com/zapper-fi-assets/tokens/ethereum/0x0000000000000000000000000000000000000000.png'
           })
 
         res.data[wallet.key.toLowerCase()]
