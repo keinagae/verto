@@ -144,8 +144,7 @@ module.exports = function (ctx) {
           ...cfg.resolve.alias,
           '@': path.resolve(__dirname, './src')
         }
-        // if (process.env.QMODE === 'bex' && cfg.mode === 'production') {
-        //   //
+        if (process.env.QMODE === 'bex' && cfg.mode === 'production') {
           cfg.plugins.push(
             new HtmlWebpackPlugin({
               template: `${__dirname}/src-bex/background.template.html`,
@@ -157,27 +156,10 @@ module.exports = function (ctx) {
               hash: false,
             })
           )
-        // console.log(cfg.optimization)
-        console.log(cfg.optimization.splitChunks)
-        // console.log(cfg.optimization.splitChunks.vendors)
-        // console.log(cfg.optimization.splitChunks.common)
-        if (cfg.optimization.splitChunks){
-          cfg.optimization.splitChunks.cacheGroups.vendors.maxSize = 4000000
+          if (cfg.optimization.splitChunks){
+            cfg.optimization.splitChunks.cacheGroups.vendors.maxSize = 4000000
+          }
         }
-          // cfg.optimization.splitChunks ={
-          //   cacheGroups: {
-          //     vendor: {
-          //       test:vendorTest,
-          //       name: 'vendors',
-          //       chunks: 'initial',
-          //       maxSize: 4000000
-          //     },
-          //     app: {
-          //       maxSize: 2000000
-          //     }
-          //   }
-          // }
-        // }
 
         cfg.module.rules.push({
           enforce: 'pre',
