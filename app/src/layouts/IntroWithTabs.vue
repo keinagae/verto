@@ -35,10 +35,12 @@
                   <img src="statics/icons/ms-icon-144x144.png" width="32" class="png_logo q-mr-sm" alt="">
                   <router-link to="/verto/dashboard">VERTO</router-link>
                   </span>
-
+                  <q-btn @click="getBalance">
+                    Balance
+                  </q-btn>
                   <div class="text-caption full-width text-center">
                   <span v-if="$store.state.wallets.customTotal.show">{{$store.state.wallets.customTotal.label}}</span>
-                  <span v-else>Total Balance</span>
+                  <span v-else>Total</span>
                     <q-btn
                       dense
                       :disable="loadingIndicator"
@@ -308,6 +310,7 @@ import TopMenu from '../components/Verto/TopMenu'
 import SelectTokenPopup from '../components/Verto/Token/SelectTokenPopup.vue'
 import TopMenuMobile from '../components/Verto/TopMenuMobile.vue'
 import { QScrollArea } from 'quasar'
+import { AtCryptoWallet } from '../util/AtCryptoWallet'
 
 export default {
   components: {
@@ -402,6 +405,10 @@ export default {
     }
   },
   methods: {
+    getBalance () {
+      const balance = new AtCryptoWallet()
+      console.log(balance)
+    },
     terra () {
       HD.Wallet('terra')
     },

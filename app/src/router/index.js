@@ -6,7 +6,11 @@ import otherRoutes from './routes'
 import login from './_login'
 import wallet from './wallet'
 const allRoutes = {
-  spa: [...otherRoutes], // Staider
+  // spa: [...otherRoutes], // Staider
+  spa: [ // verto
+    ...login,
+    ...wallet
+  ],
   pwa: [ // verto
     ...login,
     ...wallet

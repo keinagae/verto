@@ -28,7 +28,7 @@ export const updateTokens = (state, updatedtokens) => {
 
   let not_valuable = localStorage.getItem('not_valuable')
   not_valuable = not_valuable ? JSON.parse(not_valuable) : []
-  console.log(not_valuable, 'not_valuable')
+  // console.log(not_valuable, 'not_valuable')
   updatedtokens = updatedtokens.map((o, index) => {
     o.index = getWalletIndex(o)
 

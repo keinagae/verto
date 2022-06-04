@@ -126,6 +126,7 @@
               <NftsExplorer
                 v-if="false && $store.state.settings.network != 'mainnet'"
               />
+
               <keep-alive>
               <AssetsExplorer
                 @assetsChanged="assetsChanged"
@@ -169,6 +170,9 @@
         @setAsset="setAsset"
       />
     </div>
+    <q-btn>
+      Balance
+    </q-btn>
     <!-- MOBILE SECTION END  -->
   </q-page>
 </template>
@@ -222,6 +226,7 @@ if (platformTools.default) platformTools = platformTools.default
 // import TestnetPools from '../../components/Verto/Defi/TestnetPools'
 import 'intro.js/minified/introjs.min.css'
 import { osName } from 'mobile-device-detect'
+
 // import Godex from '../../components/Verto/Exchange/Godex.vue'
 // import NftsExplorer from '../../components/Verto/Token/NftsExplorer.vue'
 export default {
@@ -428,6 +433,7 @@ export default {
     }
   },
   methods: {
+
     buyToken (asset) {
       this.tab = 'exchange'
       this.assetSelected = false

@@ -47,25 +47,33 @@ class Wallets2Tokens {
     let watchAccounts = localStorage.getItem('watchAccounts')
     // store.state.currentwallet.config.keys = JSON.parse(localStorage.getItem('keys'))
     watchAccounts = watchAccounts ? JSON.parse(watchAccounts) : []
+    console.log(watchAccounts)
     let keys = JSON.parse(JSON.stringify(store.state.currentwallet.config.keys))
+    console.log(keys, 'keys')
     watchAccounts = watchAccounts.filter(o => !keys || keys.filter(a => a[o.type === 'eos' ? 'name' : 'key'].toLowerCase() === o[o.type === 'eos' ? 'name' : 'key'].toLowerCase()).length === 0)
+    console.log(watchAccounts)
     watchAccounts.map(a => {
       a.key = a.key.trim()
       a.name = a.name.trim()
     })
+    console.log(watchAccounts)
     let accounts = (keys || []).concat(watchAccounts).filter(c => !this.refresParams.chains.length || this.refresParams.chains.includes(c.type))
     let eosCount = accounts.filter(o => !o.watch && o.type === 'eos' && o.name !== 'EOS Key').length
-
+    console.log(accounts)
+    console.log(eosCount)
     if (eosCount) {
       accounts = accounts.filter(o => o.name !== 'EOS Key')
     }
 
     this.tableDataCache = this.getWalletFromCache()
+    console.log(this.tableDataCache)
+
     const self = this
 
     this.tableData = !this.refresParams.account && !this.refresParams.chains.length && !this.refresParams.fromCache ? accounts : accounts.filter(
       w => !this.isFoundInCache(w, this.tableDataCache)
     )
+    console.log(this.tableData)
 
     this.tableData.sort(function (a, b) {
       return a.type === 'eth' ? -1 : 1
@@ -561,6 +569,7 @@ class Wallets2Tokens {
   fetchCustomTokens (wallets) {
     let data = localStorage.getItem('customTokens')
     let tokens = (data ? JSON.parse(data) : [])
+    console.log(tokens)
     wallets.filter(o => Lib.isEvm(o.type)).forEach(wallet => {
       tokens.map(async (t, i) => {
         let balance = await Lib.getEvmTokenBalance(t.address, wallet.key, t.chain)
@@ -1022,7 +1031,7 @@ class Wallets2Tokens {
   }
   updateWallet () {
     let data = this.tableData.concat(this.tableDataCache)
-    console.log(data, 'data', this.tableData, this.tableDataCach)
+    // console.log(data, 'data', this.tableData, this.tableDataCach)
     store.commit('wallets/updateTokens', data)
     // store.commit('wallets/updatePortfolioTotal',// store.state.wallets.portfolioTotal)
   }
