@@ -26,6 +26,8 @@ export class AtCryptoWallet {
       return a.type === 'eth' ? -1 : 1
     })
     this.data = {}
+    const evmAccoounts = accounts.filter(account => Lib.isEvm(account.type))
+    console.log(evmAccoounts)
     this.fetchCustomTokens(accounts)
     accounts.map(wallet => {
       if (!wallet.hasOwnProperty('type')) {
@@ -309,6 +311,66 @@ export class AtCryptoWallet {
         //   // this.updateWallet()
         // }
       })
+  }
+
+  async getEvmBalance (accounts) {
+    // accounts.forEach(account => {
+    //   // Lib.getEvms().filter(m =>
+    //   //   ![1, 940].includes(m.network_id)
+    //   // ).forEach(evm=>{
+    //   //
+    //   // })
+    // })
+    // Lib.getEvms().filter(m =>
+    //   ![1, 940].includes(m.network_id) && ((!this.refresParams.chains.length || this.refresParams.chains.includes(m.chain)) && (!this.refresParams.account || this.refresParams.account.isEvm)) // Until eth is integrated into covalent api
+    // ).forEach(e => {
+    //   axios
+    //     .get(
+    //       process.env[store.state.settings.network].CACHE +
+    //       'https://api.covalenthq.com/v1/' + e.network_id +
+    //       '/address/' + wallet.key + '/balances_v2/',
+    //       { auth: { username: 'ckey_a9e6f6ab90584877b86b151eef3' } }
+    //     )
+    //     .then(res => {
+    //       res.data.data.items.map(t => {
+    //         let amount = (t.balance / 10 ** t.contract_decimals) * t.quote_rate
+    //         /* const getLogo = (chainId, t) => {
+    //           let url = null
+    //           if(chainId === 56){
+    //             url = 'https://pancakeswap.finance/images/tokens/'+t.contract_address+'.svg'
+    //           } else {
+    //           url = t.logo_url && t.logo_url.length ? t.logo_url : self.getTokenImage(e.chain, t.contract_ticker_symbol.toLowerCase())
+    //         }
+    //       } */
+    //
+    //         let type = t.contract_ticker_symbol ? t.contract_ticker_symbol.toLowerCase() : ''
+    //         self.tableData.push({
+    //           isEvm: true,
+    //           disabled: false,
+    //           type: type,
+    //           name: wallet.name,
+    //           tokenPrice: t.quote_rate,
+    //           key: wallet.key.toLowerCase(),
+    //           privateKey: wallet.privateKey,
+    //           amount: t.balance / 10 ** t.contract_decimals,
+    //           usd: amount,
+    //           watch: wallet.watch,
+    //           decimals: t.contract_decimals,
+    //           contract: t.contract_address,
+    //           chain: e.chain,
+    //           to:
+    //             '/verto/wallets/' + e.chain + '/' +
+    //             type +
+    //             '/' +
+    //             wallet.key,
+    //           icon: self.getTokenImage(e.chain, type)
+    //         })
+    //       })
+    //       this.updateWallet()
+    //     }).catch(e => {
+    //       console.log(e, 'covalenthq')
+    //     })
+    // })
   }
 
   getEOSTokens (wallet, balances) {

@@ -310,7 +310,7 @@ import TopMenu from '../components/Verto/TopMenu'
 import SelectTokenPopup from '../components/Verto/Token/SelectTokenPopup.vue'
 import TopMenuMobile from '../components/Verto/TopMenuMobile.vue'
 import { QScrollArea } from 'quasar'
-import { AtCryptoWallet } from '../util/AtCryptoWallet'
+import { AtCryptoWallet } from '../util/atcrypto'
 
 export default {
   components: {
@@ -407,7 +407,9 @@ export default {
   methods: {
     getBalance () {
       const balance = new AtCryptoWallet()
-      console.log(balance)
+      balance.balance().then(() =>
+        console.log(balance)
+      )
     },
     terra () {
       HD.Wallet('terra')
