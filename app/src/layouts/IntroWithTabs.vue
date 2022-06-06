@@ -14,8 +14,10 @@
         :breakpoint="500"
         :content-class="$store.state.settings.lightMode === 'false' ? 'bg-grey-3':'drawer-dark-theme'"
       >
-        <q-scroll-area :dark="$store.state.settings.lightMode === 'true'" :visible="true" class="" style="margin-left: -15px !important; height: 100vh;">
-          <div class="left-area gt-sm full-width" :class="{'dark-theme': $store.state.settings.lightMode === 'true'}" v-if="!$q.screen.lt.sm">
+        <q-scroll-area :dark="$store.state.settings.lightMode === 'true'" :visible="true" class=""
+                       style="margin-left: -15px !important; height: 100vh;">
+          <div class="left-area gt-sm full-width" :class="{'dark-theme': $store.state.settings.lightMode === 'true'}"
+               v-if="!$q.screen.lt.sm">
             <div class="left">
               <div class="img app-logo flex flex-center">
                 <div class="balance column justify-center items-center">
@@ -39,8 +41,9 @@
                     Balance
                   </q-btn>
                   <div class="text-caption full-width text-center">
-                  <span v-if="$store.state.wallets.customTotal.show">{{$store.state.wallets.customTotal.label}}</span>
-                  <span v-else>Total</span>
+                    <span
+                      v-if="$store.state.wallets.customTotal.show">{{ $store.state.wallets.customTotal.label }}</span>
+                    <span v-else>Total</span>
                     <q-btn
                       dense
                       :disable="loadingIndicator"
@@ -57,7 +60,21 @@
                     ${{ fundTotal }}
                   </div>
 
-              <p class="text-body2 text-center test text-grey" v-if="$store.state.wallets.tokens.length && loadingIndicator"><span class="text-bold">Updating {{getChainLabel($store.state.wallets.tokens[$store.state.wallets.tokens.length - 1].chain)}} wallet</span><br/><span class="deep-purple-12">{{$store.state.wallets.tokens[$store.state.wallets.tokens.length - 1].name}}</span> {{$store.state.wallets.tokens[$store.state.wallets.tokens.length - 1].total ? '($'+formatNumber($store.state.wallets.tokens[$store.state.wallets.tokens.length - 1].total,0)+')' : ''}} <br> {{$store.state.wallets.tokens[$store.state.wallets.tokens.length - 1].type.toUpperCase()}} balance:  (${{formatNumber($store.state.wallets.tokens[$store.state.wallets.tokens.length - 1].usd,2)}})...</p>
+                  <p class="text-body2 text-center test text-grey"
+                     v-if="$store.state.wallets.tokens.length && loadingIndicator"><span
+                    class="text-bold">Updating {{
+                      getChainLabel($store.state.wallets.tokens[$store.state.wallets.tokens.length - 1].chain)
+                    }} wallet</span><br/><span
+                    class="deep-purple-12">{{
+                      $store.state.wallets.tokens[$store.state.wallets.tokens.length - 1].name
+                    }}</span>
+                    {{
+                      $store.state.wallets.tokens[$store.state.wallets.tokens.length - 1].total ? '($' + formatNumber($store.state.wallets.tokens[$store.state.wallets.tokens.length - 1].total, 0) + ')' : ''
+                    }}
+                    <br> {{ $store.state.wallets.tokens[$store.state.wallets.tokens.length - 1].type.toUpperCase() }}
+                    balance:
+                    (${{ formatNumber($store.state.wallets.tokens[$store.state.wallets.tokens.length - 1].usd, 2) }})...
+                  </p>
 
                   <div class="row flex flex-center q-pt-md q-pb-sm">
                     <q-btn
@@ -87,18 +104,24 @@
                 </div>
               </div>
               <ul class="left-menu">
-                <li class="q-pb-md flex text-center cursor-pointer tools-label-li" v-if="$store.state.settings.defaultChainData && tools[$store.state.settings.defaultChainData.chain]" >
+                <li class="q-pb-md flex text-center cursor-pointer tools-label-li"
+                    v-if="$store.state.settings.defaultChainData && tools[$store.state.settings.defaultChainData.chain]">
                   <a @click="chainTools.show = !chainTools.show" class="tools-label">
-                    <q-icon size="md"  class="q-pr-sm" :name="'img:'+icons[$store.state.settings.defaultChainData.chain]" />
+                    <q-icon size="md" class="q-pr-sm"
+                            :name="'img:'+icons[$store.state.settings.defaultChainData.chain]"/>
                     <span>Chains Tools
-                      <q-icon  class="q-pl-md" :name="!chainTools.show  ? 'expand_more' : 'expand_less' " />
+                      <q-icon class="q-pl-md" :name="!chainTools.show  ? 'expand_more' : 'expand_less' "/>
                     </span>
                   </a>
 
                 </li>
-                <li v-show="chainTools.show && $store.state.settings.defaultChainData && tools[$store.state.settings.defaultChainData.chain]" v-for="(path, index) in ( $store.state.settings.defaultChainData ? tools[$store.state.settings.defaultChainData.chain] : [])" :key="index" class="tools" :class="{ active: $route.path == path.to }">
+                <li
+                  v-show="chainTools.show && $store.state.settings.defaultChainData && tools[$store.state.settings.defaultChainData.chain]"
+                  v-for="(path, index) in ( $store.state.settings.defaultChainData ? tools[$store.state.settings.defaultChainData.chain] : [])"
+                  :key="index" class="tools" :class="{ active: $route.path == path.to }">
                   <router-link :to="path.to">
-                    <q-icon :name="path.icon"/><span>{{path.title}}</span></router-link
+                    <q-icon :name="path.icon"/>
+                    <span>{{ path.title }}</span></router-link
                   >
                 </li>
                 <li @click="trigger++" :class="{ active: $route.path == '/verto/dashboard' }">
@@ -112,21 +135,22 @@
                   :class="{ active: $route.path == '/verto/crosschain-exchange' }"
                 >
                   <a href="javascript:void(0)"
-                    ><i class="fas fa-exchange-alt change-c"></i
-                    ><span>Exchange</span></a
+                  ><i class="fas fa-exchange-alt change-c"></i
+                  ><span>Exchange</span></a
                   >
                 </li>
                 <li :class="{ active: $route.path == '/verto/farms' }">
                   <router-link to="/verto/farms"
-                    ><i class="fas fa-rocket"></i><span>Farms </span>
+                  ><i class="fas fa-rocket"></i><span>Farms </span>
 
-                      </router-link
+                  </router-link
                   >
                 </li>
-                <li @click="setAccountGoTo('/verto/history', 'eth')" :class="{ active: $route.path == '/verto/history' }">
+                <li @click="setAccountGoTo('/verto/history', 'eth')"
+                    :class="{ active: $route.path == '/verto/history' }">
                   <a href="javascript:void(0)"
-                    ><i class="fas fa-stream change-c"></i
-                    ><span>History</span></a
+                  ><i class="fas fa-stream change-c"></i
+                  ><span>History</span></a
                   >
                 </li>
                 <li
@@ -134,8 +158,8 @@
                   :class="{ active: $route.path == '/verto/stake' }"
                 >
                   <router-link to="/verto/stake"
-                    ><i class="fas fa-stream change-c"></i
-                    ><span>Stake</span></router-link
+                  ><i class="fas fa-stream change-c"></i
+                  ><span>Stake</span></router-link
                   >
                 </li>
                 <li
@@ -143,13 +167,13 @@
                   :class="{ active: $route.path == '/verto/explorer' }"
                 >
                   <router-link to="/verto/explorer"
-                    ><i class="fas fa-stream change-c"></i
-                    ><span>Explorer</span></router-link
+                  ><i class="fas fa-stream change-c"></i
+                  ><span>Explorer</span></router-link
                   >
                 </li>
                 <li :class="{ active: $route.path == '/verto/profile' }">
                   <router-link to="/verto/profile"
-                    ><i class="far fa-user change-c"></i><span>Profile</span>
+                  ><i class="far fa-user change-c"></i><span>Profile</span>
                   </router-link>
                 </li>
                 <li
@@ -157,53 +181,56 @@
                   :class="{ active: $route.path.includes('accounts') }"
                 >
                   <a href="javascript:void(0)"
-                    ><i class="fas fa-plus change-c"></i><span>Accounts <q-icon size="md" name="keyboard_arrow_right" /></span>
+                  ><i class="fas fa-plus change-c"></i><span>Accounts <q-icon size="md"
+                                                                              name="keyboard_arrow_right"/></span>
                   </a>
                 </li>
 
                 <li
-                v-if="$route.path.includes('accounts')"
+                  v-if="$route.path.includes('accounts')"
                   @click="goToAccounts('import')"
                   :class="{ active: $route.path.includes('accounts') , 'text-deep-purle-12' : $store.state.settings.accountTab == 'import'}"
                 >
                   <a href="javascript:void(0)"
-                    ><i class="fas fa-wallet change-c"></i><span>Import Account </span>
+                  ><i class="fas fa-wallet change-c"></i><span>Import Account </span>
                   </a>
                 </li>
                 <li
-                v-if="$route.path.includes('accounts') && false"
+                  v-if="$route.path.includes('accounts') && false"
                   @click="goToAccounts('import')"
                   :class="{ active: $route.path.includes('accounts') , 'text-deep-purle-12' : $store.state.settings.accountTab == 'import' }"
                 >
                   <a href="javascript:void(0)"
-                    ><i class="fas fa-smile-beam change-c"></i><span>Watch account </span>
+                  ><i class="fas fa-smile-beam change-c"></i><span>Watch account </span>
                   </a>
                 </li>
                 <li
-                v-if="$route.path.includes('accounts')"
+                  v-if="$route.path.includes('accounts')"
                   @click="goToAccounts('create')"
                   :class="{ active: $route.path.includes('accounts') , 'text-deep-purle-12' : $store.state.settings.accountTab == 'create' }"
                 >
                   <a href="javascript:void(0)"
-                    ><i class="fas fa-plus-circle change-c"></i><span>New account </span>
+                  ><i class="fas fa-plus-circle change-c"></i><span>New account </span>
                   </a>
                 </li>
                 <li
-                v-if="$route.path.includes('accounts')"
+                  v-if="$route.path.includes('accounts')"
                   @click="goToAccounts('privateKeys')"
                   :class="{ active: $route.path.includes('accounts') ,'text-deep-purle-12' : $store.state.settings.accountTab == 'privateKeys'}"
                 >
                   <a href="javascript:void(0)"
-                    ><i class="fas fa-lock change-c"></i><span>Private keys </span>
+                  ><i class="fas fa-lock change-c"></i><span>Private keys </span>
                   </a>
                 </li>
 
               </ul>
             </div>
             <span class="version full-width text-center column">
-              <span class="text-grey">{{version}}</span>
+              <span class="text-grey">{{ version }}</span>
               <span class="q-pa-sm text-grey">
-                This app is in beta, please send us bug reports if you find any. <b><a target="_blank" class="text-deep-purple-12c" href="https://t.me/vertosupport">t.me/vertosupport</a></b>
+                This app is in beta, please send us bug reports if you find any. <b><a target="_blank"
+                                                                                       class="text-deep-purple-12c"
+                                                                                       href="https://t.me/vertosupport">t.me/vertosupport</a></b>
               </span>
             </span>
           </div>
@@ -214,31 +241,35 @@
           to mini-mode
         -->
         <div
-        v-if="false"
+          v-if="false"
           class="q-mini-drawer-hide "
           style="margin-top: -95px; right: -17px"
         >
           <span class="version full-width text-center column">
-            <span class="q-mb-md text-grey">{{version}}</span>
+            <span class="q-mb-md text-grey">{{ version }}</span>
             <span class="q-pa-sm text-grey">
-              This app is in beta, please send us bug reports if you find any. <b><a target="_blank" class="text-deep-purple-12c" href="https://t.me/vertosupport">t.me/vertosupport</a></b>
+              This app is in beta, please send us bug reports if you find any. <b><a target="_blank"
+                                                                                     class="text-deep-purple-12c"
+                                                                                     href="https://t.me/vertosupport">t.me/vertosupport</a></b>
             </span>
           </span>
         </div>
       </q-drawer>
 
-      <q-page-container id="main-container" :class="{'dark-theme':$store.state.settings.lightMode === 'true'}" :style="$q.platform.is.mobile ? ( $route.name === 'dashboard' && $store.state.settings.lightMode !== 'true' ? 'overflow:scroll; background:  #f2f2f2 !important': 'overflow:scroll; ') : 'overflow:scroll;' " >
+      <q-page-container id="main-container" :class="{'dark-theme':$store.state.settings.lightMode === 'true'}"
+                        :style="$q.platform.is.mobile ? ( $route.name === 'dashboard' && $store.state.settings.lightMode !== 'true' ? 'overflow:scroll; background:  #f2f2f2 !important': 'overflow:scroll; ') : 'overflow:scroll;' ">
 
         <div v-if="$q.platform.is.mobile||$isbex">
           <div id="scrollID8"></div>
           <!-- <q-pull-to-refresh @refresh="refresh" > -->
 
-            <TopMenuMobile  v-if="$route.path == '/verto/dashboard'" :chainTools.sync="chainTools" :keys.sync="keys" :showPanelStatus.sync="showPanelStatus" :refreshWallet="refreshWallet"/>
+          <TopMenuMobile v-if="$route.path == '/verto/dashboard'" :chainTools.sync="chainTools" :keys.sync="keys"
+                         :showPanelStatus.sync="showPanelStatus" :refreshWallet="refreshWallet"/>
           <!-- </q-pull-to-refresh> -->
         </div>
         <div v-else>
-           <TopMenu />
-         <!--  <TopMenuMobile v-if="$q.platform.is.mobile||$isbex" :chainTools.sync="chainTools" :keys.sync="keys" :showPanelStatus.sync="showPanelStatus" :refreshWallet="refreshWallet"/>-->
+          <TopMenu/>
+          <!--  <TopMenuMobile v-if="$q.platform.is.mobile||$isbex" :chainTools.sync="chainTools" :keys.sync="keys" :showPanelStatus.sync="showPanelStatus" :refreshWallet="refreshWallet"/>-->
         </div>
 
         <q-breadcrumbs
@@ -246,7 +277,8 @@
           v-if="$route.path != '/verto/dashboard'   && !($q.platform.is.mobile||$isbex)"
         >
           <template v-slot:separator>
-            <q-icon size="1.5em" name="chevron_right" :color="$store.state.settings.lightMode === 'true' ? 'white':'primary'" />
+            <q-icon size="1.5em" name="chevron_right"
+                    :color="$store.state.settings.lightMode === 'true' ? 'white':'primary'"/>
           </template>
           <q-breadcrumbs-el
             label="Back"
@@ -262,17 +294,18 @@
             class="cursor-pointer"
             :class="{'text-white': $store.state.settings.lightMode === 'true'}"
           />
-           <q-breadcrumbs-el
+          <q-breadcrumbs-el
             v-if="$route.name.includes('token') && $route.params.asset && $route.params.asset.type"
             :icon="'img:'+$route.params.asset.icon"
             :label="$route.params.asset.type.toUpperCase()"
             class="cursor-pointer"
             :class="{'text-white': $store.state.settings.lightMode === 'true'}"
           />
-          <q-breadcrumbs-el v-else class="text-capitalize" :class="{'text-white': $store.state.settings.lightMode === 'true'}" :label="$route.name" />
+          <q-breadcrumbs-el v-else class="text-capitalize"
+                            :class="{'text-white': $store.state.settings.lightMode === 'true'}" :label="$route.name"/>
         </q-breadcrumbs>
 
-        <router-view class="main-container" :key="$route.path+trigger" v-if="toggleView" />
+        <router-view class="main-container" :key="$route.path+trigger" v-if="toggleView"/>
       </q-page-container>
 
       <q-footer v-if="($q.platform.is.mobile||$isbex) && showPanelStatus && false" elevated class=" text-white">
@@ -285,15 +318,23 @@
           class=" shadow-2 text-bold"
           :class="$store.state.settings.lightMode === 'true' ? 'mobile-card':'bg-white text-grey-7'"
         >
-          <q-tab v-if="!$isbex" name="exchange" icon="sync"  no-caps @click="goTo('crosschain-exchange')"> <div style="font-size: 11px;line-height: 1.715em; font-weight: 500;">Exchange</div> </q-tab>
-          <q-tab name="history" icon="history"  no-caps @click="goTo('history')"> <div style="font-size: 11px;line-height: 1.715em; font-weight: 500;">History</div> </q-tab>
+          <q-tab v-if="!$isbex" name="exchange" icon="sync" no-caps @click="goTo('crosschain-exchange')">
+            <div style="font-size: 11px;line-height: 1.715em; font-weight: 500;">Exchange</div>
+          </q-tab>
+          <q-tab name="history" icon="history" no-caps @click="goTo('history')">
+            <div style="font-size: 11px;line-height: 1.715em; font-weight: 500;">History</div>
+          </q-tab>
           <q-tab v-if="!$isbex" name="dashboard" icon="dashboard" label=" " @click="goTo('dashboard')"/>
-          <q-tab name="account" icon="account_balance"  no-caps @click="goTo('wallets')"> <div style="font-size: 11px;line-height: 1.715em; font-weight: 500;">Wallets</div> </q-tab>
-          <q-tab name="profile" icon="person"  style="font-size: 5px;" no-caps @click="goTo('profile')"><div style="font-size: 11px;line-height: 1.715em; font-weight: 500;">Settings</div> </q-tab>
+          <q-tab name="account" icon="account_balance" no-caps @click="goTo('wallets')">
+            <div style="font-size: 11px;line-height: 1.715em; font-weight: 500;">Wallets</div>
+          </q-tab>
+          <q-tab name="profile" icon="person" style="font-size: 5px;" no-caps @click="goTo('profile')">
+            <div style="font-size: 11px;line-height: 1.715em; font-weight: 500;">Settings</div>
+          </q-tab>
         </q-tabs>
       </q-footer>
 
-      <SelectTokenPopup :key="keys.send" v-if="chainTools.send" />
+      <SelectTokenPopup :key="keys.send" v-if="chainTools.send"/>
 
     </q-layout>
   </div>
@@ -385,7 +426,9 @@ export default {
     }
   },
   mounted () {
-    if (this.$q.platform.is.mobile) { this.checkRoute() }
+    if (this.$q.platform.is.mobile) {
+      this.checkRoute()
+    }
   },
   watch: {
     '$store.state.wallets.portfolioTotal': function () {
@@ -401,12 +444,20 @@ export default {
     },
     '$route': function () {
       console.log(this.$route, 'this.$route')
-      if (this.$q.platform.is.mobile) { this.checkRoute() }
+      if (this.$q.platform.is.mobile) {
+        this.checkRoute()
+      }
     }
   },
   methods: {
     getBalance () {
-      const balance = new AtCryptoWallet()
+      const keys_json = '[{"type":"eth","name":"A1 Jakiero 772","key":"0xf4dcb9ca53b74e039f5fcfccd4f0548547a25772","chain":"eth"},{"type":"eos","name":"againagain11","key":"EOS8NCGrujCqJsnW4rrY2NrADy8gWoUhXD9kYpPVk9ATVFA3PCN8V","chain":"eos"},{"type":"eth","name":"ALBB205","key":"0x4973620b527cd74034f70c00b80d90b25a05d205","chain":"eth"},{"type":"avax","name":"Avalanche","key":"X-avax1m0dgdaqwd8tqqz86equqk3z9serhy3teg5k5ng","chain":"avax"},{"type":"eth","name":"BBMM 28","key":"0x76aa4f986154436e950604d59b5c6a54369b1e28","chain":"eth"},{"type":"btc","name":"Berthonytest","key":"12DbqbSgGu1naXHyGBdi3tVCJtVyw7PVxb","chain":"btc"},{"type":"bnb","name":"Binance Coin","key":"bnb1yzvev7j4lg0ah4v0tytg8ann7pftpu8kdw06z4","chain":"bnb"},{"type":"btc","name":"Bitcoin","key":"1Q4o6tBhsFx227aqUDtoqKtspMrPWTgSwT","chain":"btc"},{"type":"eth","name":"Chrome RoG ","key":"0x59e1a680bca30548e9d9a7f84db457cdbce9f41f","chain":"eth"},{"type":"eth","name":"CNVRT E74","key":"0x91b9dada77e2eb76d6f36b96f448c1f9a066be74","chain":"eth"},{"type":"eos","name":"crosschainfx","key":"EOS5if8Nkc8Uz1srNcdeMfSeBk19qFueYqjzduCiKzGc4Uharoecr","chain":"eos"},{"type":"dash","name":"DASH","key":"XecPhYXfWD9YKEBmneYoygFCJZd5mfbKCm","chain":"dash"},{"type":"eth","name":"ETH VTX 8B4","key":"0xcd41c348dc78869a93bc9571f3c175e1997048b4","chain":"eth"},{"type":"eos","name":"haydqmjyhage","key":"EOS8Y39ewxVunTZ8MhCqfA4DNXU52BaHJMktaHePVEduPKRanztuk","chain":"eos"},{"type":"eth","name":"JAK 6608","key":"0x181717bab64928669f606ee8b266502aaa2f6608","chain":"eth"},{"type":"eos","name":"lovevolentix","key":"EOS7N5KMPP5P9kFJhe7NPRTVC326oMjvuqgwiozk1ZYcPKUBf74Jc","chain":"eos"},{"type":"eth","name":"MLBSC 25a","key":"0x508f51c6fe10e5117caaef3306fd2126a161825a","chain":"eth"},{"type":"eos","name":"newvertoacct","key":"EOS8NCGrujCqJsnW4rrY2NrADy8gWoUhXD9kYpPVk9ATVFA3PCN8V","chain":"eos"},{"type":"eos","name":"newvertoeth1","key":"EOS5if8Nkc8Uz1srNcdeMfSeBk19qFueYqjzduCiKzGc4Uharoecr","chain":"eos"},{"type":"dot","name":"Polkadot","key":"1ERSWijTyngFo4ke1yaQbDzwmBMgSgRLpExxJd7yfJW6NMg","chain":"dot"},{"type":"eth","name":"SAM B73","key":"0x1ebc811a09175243dff76db56dd2d1eb5aef7b73","chain":"eth"},{"type":"eth","name":"SCI 688D","key":"0xef2ed8be426cd7057eb4fe5d636a03ff49b4688d","chain":"eth"},{"type":"eth","name":"SIF 232","key":"0x8a1bdb4feed4faf85a75b5fca07215e41f98d232","chain":"eth"},{"type":"sol","name":"Solana","key":"876EhcAoFA3HVyaFkxepHoTXXnK9nhYHMZMYUnudxgSD","chain":"sol"},{"type":"eth","name":"STAIDER 862","key":"0x4a02deadd223e106185144181b0816549edec862","chain":"eth"},{"type":"eth","name":"TIP1 DAC","key":"0x08eaac8841bafe6410d4a1f4338ee5a85cda3dac","chain":"eth"},{"type":"eth","name":"TR1 EF5","key":"0x104b7742725bb51c294e00e7922b74a89352aef5","chain":"eth"},{"type":"eth","name":"Tr2 13b","key":"0x3cf778ddc622f3ba7a4370fcb07e624de72fe13b","chain":"eth"},{"type":"eth","name":"TrezD87","key":"0xa551fb91e64e50e444a2292c6c598f02140dfd87","chain":"eth"},{"type":"eos","name":"vdex4freedom","key":"EOS6H5PophycCTismhywrguZ2N5VBSe3u5MRzFpL3hZH62de5ti2L","chain":"eos"},{"type":"eos","name":"vertofreeacc","key":"EOS5if8Nkc8Uz1srNcdeMfSeBk19qFueYqjzduCiKzGc4Uharoecr","chain":"eos"},{"type":"eos","name":"volentixcltw","key":"EOS6qw32CdRGMhAhFfKgSo7L5ArQCszbaQ9ye3c9Ym1nLEasAAJrr","chain":"eos"},{"type":"eos","name":"volentixdart","key":"EOS7N5KMPP5P9kFJhe7NPRTVC326oMjvuqgwiozk1ZYcPKUBf74Jc","chain":"eos"},{"type":"eos","name":"volentixdnhw","key":"EOS688emkMYqbedGSiNWvDFgAW56WmC4G2nTqshV4Gi1UZKFddGXx","chain":"eos"},{"type":"eos","name":"volentixeduv","key":"EOS7LaNePyHTeTTHw9gC3iYGXsNXjuk5xd2WKLfKviSm791hRW51Q","chain":"eos"},{"type":"eos","name":"volentixjeud","key":"EOS6iEvHXoDa4wSEvJ5eY1p6JBJzo1Ymm4p4Dm8MbAzHjNHnjnYsw","chain":"eos"},{"type":"eos","name":"volentixogym","key":"EOS7i2grApxwbHZzHVmheVHjRncRwqcnp63uVUskL1gAKAdrqx7q7","chain":"eos"},{"type":"eos","name":"volentixprvt","key":"EOS8KpH6xqu9CyjvwX6vkNX8LND25Sr41pDo8EK5HRi6zDiYXCg88","chain":"eos"},{"type":"eos","name":"volentixsekf","key":"EOS7RbAVp2jRVFeuTUznjBa66xnmFAxsAEZRgDJBdXxEqbawZRkdL","chain":"eos"},{"type":"eos","name":"volentixsema","key":"EOS77q3WNk6jsXB6kCUvQXanFwfWMR5hom4DtToUQscn77GsjJtGS","chain":"eos"},{"type":"eos","name":"volentixtvgd","key":"EOS8T97E5qJNdaLbZKDZBXSP6qFuVf3b86c41FdrqHqQAWV2ieb2f","chain":"eos"},{"type":"eos","name":"volentixwcrf","key":"EOS76vFHiiHiZP8e8rLGQynbqGMVzmjvKbGrRkTf8WC9URCCFbT8E","chain":"eos"},{"type":"eos","name":"volentixwufa","key":"EOS6cfHkzvTUgEaAzMH6DA8i73VF2S2T4BYc4FXYqHwpACtKvzv4U","chain":"eos"},{"type":"eos","name":"volentixwugn","key":"EOS8R6xGUE9yM1SeP4XKRKLFkbN6Sbon1yrTEsf35fJAZqgBP1Zkk","chain":"eos"},{"type":"eos","name":"volentixxjav","key":"EOS6qLzvCSo8HuTPFgZc5g5Mi2JEPuMnY6bAZ6pUaTYYVP2DUExBH","chain":"eos"},{"type":"eos","name":"volentixzfqi","key":"EOS8hdL4KK7QPxFLZpCgAA3RjyW3qq5kape4KJNjcbPy2r5FtutiG","chain":"eos"},{"type":"eos","name":"","key":"EOS6H5PophycCTismhywrguZ2N5VBSe3u5MRzFpL3hZH62de5ti2L","chain":"eos"},{"type":"eth","name":"A1 Jakiero 772","key":"0xf4dcb9ca53b74e039f5fcfccd4f0548547a25772","chain":"eth"}]'
+      const balance = new AtCryptoWallet({
+        keys: JSON.parse(keys_json),
+        update: (data) => {
+          console.log('data received in update', data)
+        }
+      })
       balance.balance().then(() =>
         console.log(balance)
       )
@@ -426,14 +477,22 @@ export default {
         this.showPanelStatus = false
       }
       // set tab
-      if (this.$route.name === 'dashboard') { this.tabRoute = 'dashboard' }
+      if (this.$route.name === 'dashboard') {
+        this.tabRoute = 'dashboard'
+      }
       if (this.$route.name === 'profile') {
         this.tabRoute = 'profile'
         this.showPanelStatus = false
       }
-      if (this.$route.name === 'history') { this.tabRoute = 'history' }
-      if (this.$route.name === 'crosschain-exchange') { this.tabRoute = 'exchange' }
-      if (this.$route.name === 'wallets') { this.tabRoute = 'account' }
+      if (this.$route.name === 'history') {
+        this.tabRoute = 'history'
+      }
+      if (this.$route.name === 'crosschain-exchange') {
+        this.tabRoute = 'exchange'
+      }
+      if (this.$route.name === 'wallets') {
+        this.tabRoute = 'account'
+      }
     },
     sendTokens () {
       this.toggleView = false
@@ -494,16 +553,19 @@ export default {
 </script>
 <style scoped>
 h2 {
-  line-height: initial !important ;
+  line-height: initial !important;
 }
+
 /deep/ .q-page-container {
   padding-top: 0px;
 }
+
 .center-element {
   margin: 0 auto;
   text-align: center;
   display: block;
 }
+
 .wrapper {
   width: 100%;
   background: #ffffff;
@@ -515,25 +577,31 @@ h2 {
   background: #f2f2f2;
   float: left;
 }
+
 .breadcrumbs {
   padding: 9px 0px 9px 10px;
   margin-top: 70px;
-  background: rgba(0,0,0, .02);
+  background: rgba(0, 0, 0, .02);
 }
+
 .dark-theme .breadcrumbs {
-  background: rgba(255,255,255, .05);
+  background: rgba(255, 255, 255, .05);
 }
+
 .top /deep/ .account_selector {
   width: 170px !important;
 }
+
 .left {
   background: #f5f6fa;
 }
+
 .left ul {
   padding: 20px;
   padding-right: 0px;
   padding-left: 0px;
 }
+
 .left .img {
   padding: 5px 20px;
   max-width: 300px;
@@ -565,12 +633,13 @@ h2 {
   text-decoration: none;
   transition: all 0.3s ease;
 }
-.left ul li.tools a{
+
+.left ul li.tools a {
   font-size: 14px;
   padding: 10px 20px;
 }
 
-.left ul li a i , .left ul li.tools /deep/ .q-icon {
+.left ul li a i, .left ul li.tools /deep/ .q-icon {
   margin-right: 30px;
   color: #7e838d;
   font-size: 22px;
@@ -579,7 +648,7 @@ h2 {
 
 .left ul li a:hover,
 .active a {
-  background: white !important ;
+  background: white !important;
   color: #b6b6b6 !important;
   height: fit-content;
   border-radius: 0px !important;
@@ -695,6 +764,7 @@ h2 {
   font-size: 23px;
   font-weight: 700;
 }
+
 .wrapp-all h4 {
   font-size: 18px;
   font-weight: 600;
@@ -831,6 +901,7 @@ h2 {
   font-size: 30px;
   font-weight: 700;
 }
+
 .big-list h4 {
   font-size: 25px;
   font-weight: 700;
@@ -910,6 +981,7 @@ h2 {
   .mid input[type="text"] {
     width: 81%;
   }
+
   .wrapp-all h4 {
     font-size: 17px;
     font-weight: 600;
@@ -928,6 +1000,7 @@ h2 {
   .wrapp-all h3 a {
     font-size: 9px;
   }
+
   .wrapp-all h4 span {
     font-size: 14px;
   }
@@ -947,6 +1020,7 @@ h2 {
   .right {
     padding: 20px 15px;
   }
+
   .big-list {
     margin-top: 30px;
   }
@@ -954,6 +1028,7 @@ h2 {
   .big-list h4 {
     font-size: 19px;
   }
+
   .big-list h4 span {
     font-size: 15px;
   }
@@ -1005,26 +1080,32 @@ h2 {
     width: 100%;
   }
 }
+
 /deep/ .q-page-container,
 /deep/ .q-header {
   background: #FFFFFF !important;
 }
+
 /deep/ .q-page-container.dark-theme,
 /deep/ .q-header.dark-theme {
   background: #04111f !important;
 }
-/deep/ .q-page-container{
+
+/deep/ .q-page-container {
   height: 100vh;
   /* min-height: 100vh; */
   overflow-y: hidden;
 }
+
 /deep/ .desktop-version {
   padding-left: 0vh !important;
-/*  padding-top: 0vh !important; */
+  /*  padding-top: 0vh !important; */
 }
+
 .top /deep/ .account_selector .q-btn__content {
   font-size: 12px;
 }
+
 .app-logo a {
   font-weight: 700;
   text-transform: uppercase;
@@ -1033,19 +1114,23 @@ h2 {
   color: #333;
   text-decoration: none;
 }
+
 /deep/ .menu-top-wrapper {
   background: #ffffff;
 }
+
 .img.app-logo {
   padding: 0px;
   padding-top: 20px;
   /* border-bottom-left-radius: 12px; */
 }
+
 .q-tab--active {
   background: #f2f2f2;
   border-top-right-radius: 10px;
   border-top-left-radius: 10px;
 }
+
 .balance {
   background: #f8f8f8;
   padding-right: 0px;
@@ -1054,6 +1139,7 @@ h2 {
   margin-top: 0px;
   width: 100%;
 }
+
 ul.left-menu {
   background: #f5f6fa;
 }
@@ -1064,20 +1150,25 @@ ul.left-menu {
   background-position-x: -50px;
   background-repeat: no-repeat;
 }
+
 .total {
   font-size: 2rem;
   color: #333333;
   text-shadow: 10px 10px 20px #cbbbeb;
 }
+
 .tools {
   background: #e5e5e5;
 }
+
 .drawer-dark-theme .tools {
   background: #040e1a;
 }
+
 .tools-label {
   display: contents !important;
 }
+
 li.tools img {
   margin-right: 30px;
   width: 20px;
@@ -1086,78 +1177,96 @@ li.tools img {
 
 </style>
 <style>
-.drawer-dark-theme{
+.drawer-dark-theme {
   /* background: #04111f; */
   background: #040e1a;
 }
+
 .wrapper .left-area.dark-theme {
   background: #040e1a;
   /* border-right: 1px solid rgba(255,255,255, .4); */
 }
+
 .drawer-dark-theme ul.left-menu {
   background: #040e1a;
   /* border-right: 1px solid rgba(255,255,255, .4); */
 }
+
 ul.left-menu {
   max-width: 100% !important;
   min-height: 57vh;
 }
-.left ul{
+
+.left ul {
   /* padding-top: 50px; */
 }
+
 .drawer-dark-theme .left ul li a:hover,
 .drawer-dark-theme .active a {
   background: #04111f !important;
   color: #b6b6b6 !important;
 }
-.drawer-dark-theme .left ul li.tools a:hover{
+
+.drawer-dark-theme .left ul li.tools a:hover {
   background: #04111f !important;
   color: #b6b6b6 !important;
 }
+
 .drawer-dark-theme .tools.active a {
   background: #04111f !important;
   color: #b6b6b6 !important;
   box-shadow: none !important;
 }
+
 .drawer-dark-theme .active {
   clear: both;
   height: fit-content;
   border-radius: 0px;
 }
+
 .left ul li {
   padding-left: 30px;
   border-radius: 0px !important;
 }
+
 .drawer-dark-theme .active a {
   box-shadow: 0px 0px 10px 0px #0f335f;
 }
-.drawer-dark-theme .balance{
+
+.drawer-dark-theme .balance {
   background: #040e1a;
   box-shadow: none;
   color: #FFF;
   width: 100%;
 }
-.drawer-dark-theme .app-logo a{
+
+.drawer-dark-theme .app-logo a {
   color: #FFF;
 }
+
 .drawer-dark-theme .img.app-logo {
   padding: 0px;
   padding-top: 20px;
 }
+
 .drawer-dark-theme .total {
   color: #FFF;
   text-shadow: 10px 10px 20px #cbbbeb;
 }
-.drawer-dark-theme .png_logo{
+
+.drawer-dark-theme .png_logo {
   max-width: 32px;
 }
+
 .drawer-dark-theme .left {
   background: #040e1a;
 }
+
 .drawer-dark-theme .wrapper .left-area {
   background: #040e1a;
 }
-.version{
+
+.version {
   position: relative;
   left: 0px;
   bottom: 0px;
@@ -1169,10 +1278,12 @@ ul.left-menu {
   font-family: 'Libre Franklin', sans-serif;
   width: 100%;
 }
-.mobile-card{
-    background-color: #04111F !important;
+
+.mobile-card {
+  background-color: #04111F !important;
 }
-.tab-dark-mode{
+
+.tab-dark-mode {
   background-color: #071e36
 }
 </style>

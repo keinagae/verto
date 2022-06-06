@@ -1,9 +1,9 @@
 import axios from 'axios'
-import store from '../../../store'
-import Lib from '@/util/walletlib'
+import { BaseProvider } from './base'
 
-export class EVMProvider {
+export class EVMProvider extends BaseProvider {
   constructor () {
+    super()
     this.evms = [{
       name: 'Ethereum',
       chain: 'eth',
@@ -177,30 +177,30 @@ export class EVMProvider {
     }
   }
 
+  async balance (accounts) {
+    const data = {}
+    for (let i = 0; i < accounts.length; i++) {
+      const items = await this.accountBalance(accounts[i])
+      items.forEach(item => {
+        let chainData = {}
+        if (!data.hasOwnProperty(item.chain)) {
+          chainData = {
+            accounts: [],
+            amount: 0,
+            chain: item.chain
+          }
+          data[item.chain] = chainData
+        } else {
+          chainData = data[item.chain]
+        }
+        chainData.accounts.push(item)
+        chainData.amount += item.usd
+      })
+    }
+    return data
+  }
+
   evm (chain) {
     return this.evms[chain]
   }
-  getTokenImage (chain, type) {
-    if (type === 'tpls') type = 'eth'
-    let image = Lib.getDefaultToken(chain)
-    if (this.evm(chain) && store.state.tokens.evmTokens[chain]) {
-      let token = store.state.tokens.evmTokens[chain].find(o => o.symbol && type && o.symbol.toLowerCase() === type.toLowerCase())
-      if (token) image = token.logoURI
-      // Set bnb token image temp
-      //  if (type === 'bnb') image = 'https://nownodes.io/images/binance-smart-chain/bsc-logo.png'
-    } else {
-      let i = Lib.getTokenImage(type)
-      if (i) {
-        image = i
-      }
-    }
-    if (type.toLowerCase() === 'plsx') {
-      image = 'https://pulsex.com/brand/downloads/PLSX_coin.png'
-    }
-    return image
-  }
-}
-
-export function accountsToEvms () {
-
 }

@@ -19,9 +19,6 @@ export class AtCryptoWallet {
     if (eosCount) {
       accounts = accounts.filter(o => o.name !== 'EOS Key')
     }
-    accounts.forEach((item) => {
-      console.log(Lib.isEvm(item.type), item)
-    })
     accounts.sort(function (a, b) {
       return a.type === 'eth' ? -1 : 1
     })
@@ -440,8 +437,8 @@ export class AtCryptoWallet {
           this.getEOSTokensV2(wallet, balances, true)
         }
       }).catch(e => {
-        this.getEOSTokensV2(wallet, balances, true)
-      })
+      this.getEOSTokensV2(wallet, balances, true)
+    })
   }
 
   async getEOSTokensV2 (wallet, balances, fetchTokens) {
