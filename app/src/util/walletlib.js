@@ -1322,6 +1322,7 @@ class Lib {
   }
   async getEvmTokenBalance (tokenAddress, walletAddress, chain) {
     const token = await this.getEvmToken(tokenAddress, chain)
+    console.log('token for evm', token)
     let balance = await token.contract.methods.balanceOf(walletAddress).call()
     return balance / (10 ** token.decimals)
   }

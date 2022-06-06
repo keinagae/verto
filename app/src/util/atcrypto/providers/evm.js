@@ -137,17 +137,26 @@ export class EVMProvider extends BaseProvider {
 
   async accountBalance (account) {
     const evm = this.evm(account.chain)
-    let data = []
+    let items = []
+    const key = account.key
+    let data = {
+      tokenList: [],
+      amount: 0,
+      usd: 0,
+      key: key
+    }
     if (evm) {
       try {
         const response = await axios.get(
           'https://api.covalenthq.com/v1/' + evm.network_id +
-          '/address/' + account.key + '/balances_v2/',
+          '/address/' + key + '/balances_v2/',
           { auth: { username: 'ckey_a9e6f6ab90584877b86b151eef3' } }
         )
-        data = response.data.data.items.map(transaction => {
+        let totalUsd = 0
+        items = response.data.data.items.map(transaction => {
           let amount = (transaction.balance / 10 ** transaction.contract_decimals) * transaction.quote_rate
           let type = transaction.contract_ticker_symbol ? transaction.contract_ticker_symbol.toLowerCase() : ''
+          totalUsd += amount
           return {
             isEvm: true,
             disabled: false,
@@ -155,7 +164,6 @@ export class EVMProvider extends BaseProvider {
             name: account.name,
             tokenPrice: transaction.quote_rate,
             key: account.key.toLowerCase(),
-            privateKey: account.privateKey,
             amount: transaction.balance / 10 ** transaction.contract_decimals,
             usd: amount,
             watch: account.watch,
@@ -170,6 +178,8 @@ export class EVMProvider extends BaseProvider {
             icon: this.getTokenImage(evm.chain, type)
           }
         })
+        data.total = totalUsd
+        data.tokenList = items
       } catch (e) {
         console.log(e)
       }
@@ -180,22 +190,25 @@ export class EVMProvider extends BaseProvider {
   async balance (accounts) {
     const data = {}
     for (let i = 0; i < accounts.length; i++) {
-      const items = await this.accountBalance(accounts[i])
-      items.forEach(item => {
-        let chainData = {}
-        if (!data.hasOwnProperty(item.chain)) {
-          chainData = {
-            accounts: [],
-            amount: 0,
-            chain: item.chain
-          }
-          data[item.chain] = chainData
-        } else {
-          chainData = data[item.chain]
+      const account = accounts[i]
+      const accountData = await this.accountBalance(account)
+      let chainData = {}
+      if (!data.hasOwnProperty(account.chain)) {
+        chainData = {
+          accounts: {},
+          chain: account.chain
         }
-        chainData.accounts.push(item)
-        chainData.amount += item.usd
-      })
+        data[account.chain] = chainData
+      } else {
+        chainData = data[account.chain]
+      }
+      if (chainData.accounts.hasOwnProperty(accountData.key)) {
+        chainData.accounts[accountData.key].tokenList = [...chainData.accounts[accountData.key].tokenList, ...accountData.tokenList]
+      } else {
+        chainData.accounts[accountData.key] = {
+          tokenList: accountData.tokenList
+        }
+      }
     }
     return data
   }

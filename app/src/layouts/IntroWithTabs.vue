@@ -460,7 +460,7 @@ export default {
         keys: keys,
         accounts: watchAccounts,
         update: (data) => {
-          console.log('data received in update', data)
+          console.log(data)
         }
       })
       balance.balance().then(() =>
