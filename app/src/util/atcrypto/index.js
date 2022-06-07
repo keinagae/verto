@@ -38,7 +38,7 @@ export class AtCryptoWallet {
       this.nonEvmAccountsWithChains[account.chain].push(account)
     })
     console.log(this.nonEvmAccountsWithChains)
-    this.data = { chains: [] }
+    this.data = { chains: [], portfolioTotal: 0 }
     this.accounts = {
       evm: this.evmAccounts,
       eos: []
@@ -50,6 +50,9 @@ export class AtCryptoWallet {
       const accounts = this.accounts[key]
       this.providers[key].balance(accounts).then(data => {
         this.data.chains = [...this.data.chains, ...data]
+        data.forEach(chainData => {
+          this.data.portfolioTotal += chainData.chainTotal
+        })
         this.update(this.data)
       }).catch(error => {
         console.log(error)

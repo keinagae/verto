@@ -139,10 +139,10 @@ export class EVMProvider extends BaseProvider {
     const evm = this.evm(account.chain)
     let items = []
     const key = account.key
+    // chainTotal
     let data = {
       tokenList: [],
-      amount: 0,
-      usd: 0,
+      total: 0,
       key: key
     }
     if (evm) {
@@ -196,15 +196,18 @@ export class EVMProvider extends BaseProvider {
       if (!data.hasOwnProperty(account.chain)) {
         chainData = {
           accounts: [],
-          chain: account.chain
+          chain: account.chain,
+          chainTotal: 0
         }
         data[account.chain] = chainData
       } else {
         chainData = data[account.chain]
       }
       chainData.accounts.push({
-        tokenList: accountData.tokenList
+        tokenList: accountData.tokenList,
+        total: accountData.total
       })
+      chainData.chainTotal += accountData.total
     }
     return Object.values(data)
   }

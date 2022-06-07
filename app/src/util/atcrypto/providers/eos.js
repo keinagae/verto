@@ -23,7 +23,8 @@ export class EosProvider extends BaseProvider {
   async balance () {
     return [{
       accounts: [],
-      chain: 'eos'
+      chain: 'eos',
+      chainTotal: 0
     }]
   }
 }
