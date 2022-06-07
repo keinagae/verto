@@ -195,22 +195,18 @@ export class EVMProvider extends BaseProvider {
       let chainData = {}
       if (!data.hasOwnProperty(account.chain)) {
         chainData = {
-          accounts: {},
+          accounts: [],
           chain: account.chain
         }
         data[account.chain] = chainData
       } else {
         chainData = data[account.chain]
       }
-      if (chainData.accounts.hasOwnProperty(accountData.key)) {
-        chainData.accounts[accountData.key].tokenList = [...chainData.accounts[accountData.key].tokenList, ...accountData.tokenList]
-      } else {
-        chainData.accounts[accountData.key] = {
-          tokenList: accountData.tokenList
-        }
-      }
+      chainData.accounts.push({
+        tokenList: accountData.tokenList
+      })
     }
-    return data
+    return Object.values(data)
   }
 
   evm (chain) {

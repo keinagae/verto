@@ -19,4 +19,11 @@ export class EosProvider extends BaseProvider {
         this.eosUSD = res.data.data.price
       })
   }
+
+  async balance () {
+    return [{
+      accounts: [],
+      chain: 'eos'
+    }]
+  }
 }
